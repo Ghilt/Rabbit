@@ -4,75 +4,75 @@ import java.nio.file.Paths
 
 class BitopiaryLexer(filePath: String) {
 
-    private val commands = """'!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~'"""
-
-    val commandList = ArrayList<CommandBuilder>()
+    private val commandList = ArrayList<CommandBuilder>()
 
     init {
-        val syntax = BitopiarySyntii()
-        var builder = CommandBuilder(syntax)
         val stream = Files.newInputStream(Paths.get(filePath))
         stream.buffered().reader().use { reader ->
             val source = reader.readText()
-            val chars = source.filter{x -> x in commands}
-
-            for (value in chars) {
-                val consumedChar = builder.tryConsumeAccordingToSyntax(value)
-
-                if(!consumedChar){
-                    println(builder.toString())
-                    commandList.add(builder.createCommand())
-                    builder = CommandBuilder(syntax)//TODO temptemp
-                    builder.tryConsumeAccordingToSyntax(value)
-                }
+            val chars = source.filter{x -> x in BitopiarySyntax }
+            if (chars.isNotEmpty()) {
+                readInCommands(chars)
             }
-            println(builder.toString())
-            commandList.add(builder.createCommand())
         }
+    }
+
+    private fun readInCommands(chars: String) {
+
+        var builder = CommandBuilder(chars[0], BitopiarySyntax.getRelevantCommandType(chars[0]))
+        for (value in chars.tail) {
+
+            val didConsumeChar = builder.tryConsumeAccordingToSyntax(value)
+            if (!didConsumeChar) {
+                println(builder.toString())
+                commandList.add(builder)
+                builder = CommandBuilder(value, BitopiarySyntax.getRelevantCommandType(value))
+            }
+        }
+        println(builder.toString())
+        commandList.add(builder)
     }
 }
 
-class CommandBuilder(val syntax: BitopiarySyntii){ //dont use builder pattern
+class CommandBuilder(private val operator : Char,
+                     private val commandType : CommandType){
 
-    var commandType :BitopiarySyntax? = null
-    private val commands = ArrayList<Char>()
+    private val inputToCommand = ArrayList<Char>()
     var hasCommandModifier = false
 
+    init {
+        if (operator == BitopiarySyntax.commandModifier) {
+            throw Error("Syntax Error; Command Modifier as command")
+        }
+    }
+
+
     fun tryConsumeAccordingToSyntax(ch: Char) : Boolean{
-        val currentCommandSyntax = syntax.all.filter { (operators) -> operators.contains(ch) }
-        if ('.' != ch && currentCommandSyntax.size != 1) { // todo uggo
-            throw Error("Syntax Error; Something went wrong")
-        }
-        if (commands.isEmpty()){
-            return consumeOperator(ch, currentCommandSyntax[0])
-        } else if (ch == syntax.commandModifier){
-            return consumeCommandModifier()
-        } else {
-
-            if (canConsumeInput(commandType!!.standardInput, ch)){ // todo hehe nullthingamig
-                commands.add(ch)
-                return true
+        return when (ch) {
+            BitopiarySyntax.commandModifier -> consumeCommandModifier()
+            else -> return if (canConsumeInput(commandType.standardInput, ch)){
+                inputToCommand.add(ch)
+                true
+            } else {
+                false
             }
-
         }
-
-        return false
     }
 
     private fun canConsumeInput(standardInput: StandardInputType, ch: Char) : Boolean {
-        if (commands.last().isDigit()){
+        if (operator.isDigit() || inputToCommand.lastIsDigit()){
             return ch.isDigit()
         }
 
         return when(standardInput) {
             StandardInputType.Source -> !hasCommandModifier && ch.isDigit()
-            StandardInputType.Caret -> hasCommandModifier && (commands.size == 1 || commands.last().isDigit() && ch.isDigit())
+            StandardInputType.Caret -> hasCommandModifier && (inputToCommand.size == 0 || inputToCommand.lastIsDigit() && ch.isDigit())
             StandardInputType.IO -> false
         }
     }
 
     private fun consumeCommandModifier(): Boolean {
-        if (hasCommandModifier || commands.size > 1) {
+        if (hasCommandModifier || inputToCommand.isNotEmpty()) {
             throw Error("Syntax Error; double Command Modifier")
         } else {
             hasCommandModifier = true
@@ -80,27 +80,15 @@ class CommandBuilder(val syntax: BitopiarySyntii){ //dont use builder pattern
         }
     }
 
-    private fun consumeOperator(ch: Char, bitopiarySyntax: BitopiarySyntax): Boolean {
-        if (ch == syntax.commandModifier) {
-            throw Error("Syntax Error; lone Command Modifier")
-        } else {
-            commandType = bitopiarySyntax
-            commands.add(ch)
-            return true
-        }
-    }
-
     override fun toString() : String{
-        var representation = commands.toCharArray().joinToString( separator = "", transform = { x -> x.toString() })
-        return if (hasCommandModifier){
-            representation.substring(0,1) + "." + representation.substring(1)
-        } else  {
-            representation
-        }
-
+        val representation = inputToCommand.toCharArray().joinToString( separator = "", transform = { x -> x.toString() })
+        return  operator + (if (hasCommandModifier) "." else "") + representation
     }
 
-    fun createCommand() : CommandBuilder{ // todo
-        return this
-    }
 }
+
+//I wonder what the practise is where to keep extension things
+val String.tail: String // Extension property
+    get() = drop(1)
+
+fun ArrayList<Char>.lastIsDigit() = lastOrNull()?.isDigit() == true // Extension function

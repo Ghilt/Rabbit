@@ -30,7 +30,7 @@ fun main(args : Array<String>) {
     var interpreter = BitopiaryLexer(filePath = pathName)
 
     if (args.size == 0) {
-        println("Please provide a name as a command-line argument")
+        println("${'.'.isDigit()}Please provide a name as a command-line argument")
         return
     }
 

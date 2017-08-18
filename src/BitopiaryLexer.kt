@@ -8,12 +8,14 @@ class BitopiaryLexer(filePath: String) {
 
     init {
         val stream = Files.newInputStream(Paths.get(filePath))
+        var source = ""
         stream.buffered().reader().use { reader ->
-            val source = reader.readText()
-            val chars = source.filter{x -> x in BitopiarySyntax }
-            if (chars.isNotEmpty()) {
-                readInCommands(chars)
-            }
+            source = reader.readText()
+        }
+        val chars = source.filter{x -> x in BitopiarySyntax }
+        if (chars.isNotEmpty()) {
+            readInCommands(chars)
+            println("ok ok    " + checkMatchingBrackets())
         }
     }
 
@@ -32,9 +34,47 @@ class BitopiaryLexer(filePath: String) {
         println(builder.toString())
         commandList.add(builder)
     }
+
+    private fun checkMatchingBrackets() : Boolean{
+        var j = 0
+        while (j < commandList.size ) {
+            if (commandList[j].isBracket()){
+                j = checkMatchingBrackets(j+1, commandList[j].operator)
+            }
+            j++
+        }
+        return j == commandList.size  //If inner method doesn't match size is returned and increased one more time than if all matches found
+    }
+
+    private fun checkMatchingBrackets(i: Int, firstBracket :Char) : Int{
+        var j = i
+        while (j < commandList.size ) {
+
+            if (commandList[j].isBracket()){
+                val bracket = commandList[j].operator
+                if(bracket.matchesBracket(firstBracket)){
+                    return j
+                }
+                j = checkMatchingBrackets(j+1, bracket)
+            }
+            j++
+        }
+
+        return j
+    }
 }
 
-class CommandBuilder(private val operator : Char,
+private fun Char.matchesBracket(bracket: Char): Boolean  = when (this) {
+    '(' -> bracket == ')'
+    ')' -> bracket == '('
+    '[' -> bracket == ']'
+    ']' -> bracket == '['
+    '}' -> bracket == '{'
+    '{' -> bracket == '}'
+    else -> false
+}
+
+class CommandBuilder(val operator : Char,
                      private val commandType : CommandType){
 
     private val inputToCommand = ArrayList<Char>()
@@ -84,6 +124,8 @@ class CommandBuilder(private val operator : Char,
         val representation = inputToCommand.toCharArray().joinToString( separator = "", transform = { x -> x.toString() })
         return  operator + (if (hasCommandModifier) "." else "") + representation
     }
+
+    fun isBracket(): Boolean = commandType.isBracket
 
 }
 

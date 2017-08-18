@@ -12,8 +12,8 @@ object BitopiarySyntax {
         val copyInstruction = CommandType("&", StandardInputType.Caret, 1)
         val readInstruction = CommandType("=", StandardInputType.IO, 1)
         val printInstruction = CommandType(":", StandardInputType.Caret, 1)
-        val loopInstructions = CommandType("()[]", StandardInputType.Caret, 1)
-        val ifInstruction = CommandType("{}", StandardInputType.Caret, 1)
+        val loopInstructions = CommandType("()[]", StandardInputType.Caret, 1, true)
+        val ifInstruction = CommandType("{}", StandardInputType.Caret, 1, true)
         val environmentInstructions = CommandType("£?", StandardInputType.Source, 1)
         val executeInstruction = CommandType("!", StandardInputType.Caret, 3)
         val terminateInstruction = CommandType("¤", StandardInputType.Caret, 1)
@@ -53,7 +53,7 @@ object BitopiarySyntax {
     }
 }
 
-data class CommandType(val operators: String, val standardInput: StandardInputType, val modulo: Int)
+data class CommandType(val operators: String, val standardInput: StandardInputType, val modulo: Int, val isBracket :Boolean = false)
 
 enum class StandardInputType {
     Source, Caret, IO

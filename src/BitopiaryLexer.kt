@@ -1,5 +1,6 @@
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.*
 
 
 class BitopiaryLexer(filePath: String) {
@@ -35,47 +36,23 @@ class BitopiaryLexer(filePath: String) {
         commandList.add(builder)
     }
 
-    private fun checkMatchingBrackets() : Boolean{
-        var j = 0
-        while (j < commandList.size ) {
-            if (commandList[j].isBracket()){
-                j = checkMatchingBrackets(j+1, commandList[j].operator)
-            }
-            j++
-        }
-        return j == commandList.size  //If inner method doesn't match size is returned and increased one more time than if all matches found
-    }
 
-    private fun checkMatchingBrackets(i: Int, firstBracket :Char) : Int{
-        var j = i
-        while (j < commandList.size ) {
+    private fun checkMatchingBrackets() : Boolean {
+        val stack = Stack<CommandBuilder>()
 
-            if (commandList[j].isBracket()){
-                val bracket = commandList[j].operator
-                if(bracket.matchesBracket(firstBracket)){
-                    return j
-                }
-                j = checkMatchingBrackets(j+1, bracket)
+        for (c in commandList.filter { it.isBracket() }) {
+            if (stack.isNotEmpty() && c.matchesBracket(stack.peek())) {
+                stack.pop()
+            } else {
+                stack.push(c)
             }
-            j++
         }
 
-        return j
+        return stack.isEmpty()
     }
 }
 
-private fun Char.matchesBracket(bracket: Char): Boolean  = when (this) {
-    '(' -> bracket == ')'
-    ')' -> bracket == '('
-    '[' -> bracket == ']'
-    ']' -> bracket == '['
-    '}' -> bracket == '{'
-    '{' -> bracket == '}'
-    else -> false
-}
-
-class CommandBuilder(val operator : Char,
-                     private val commandType : CommandType){
+class CommandBuilder(private val operator : Char, private val commandType : CommandType){
 
     private val inputToCommand = ArrayList<Char>()
     var hasCommandModifier = false
@@ -126,6 +103,17 @@ class CommandBuilder(val operator : Char,
     }
 
     fun isBracket(): Boolean = commandType.isBracket
+
+
+    fun matchesBracket(bracket: CommandBuilder): Boolean  = when (bracket.operator) {
+        '(' -> operator == ')'
+        ')' -> operator == '('
+        '[' -> operator == ']'
+        ']' -> operator == '['
+        '}' -> operator == '{'
+        '{' -> operator == '}'
+        else -> false
+    }
 
 }
 

@@ -12,6 +12,18 @@ fun main(args : Array<String>) {
 //        b.executeInstruction()
 //    }
 
+    val inputToCommand = ArrayList<Char>()
+    inputToCommand.add('9')
+    inputToCommand.add('1')
+    inputToCommand.add('1')
+    inputToCommand.add('0')
+    inputToCommand.add('0')
+    inputToCommand.add('4')
+
+
+    print("${'2'.toInt()}HIIIII   ${inputToCommand.toInt()} and the beat goes on\n")
+    print("${'2'.toInt()}HIIIII   ${inputToCommand.toInt()} and the beat goes on\n")
+
 
     var interpreter = BitopiaryLexer(filePath = pathName)
     interpreter.program.run()

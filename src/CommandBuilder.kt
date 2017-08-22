@@ -1,8 +1,9 @@
-import Instructions.AddInstruction
+import Instructions.StackInstruction
 import Instructions.Instruction
 
-class CommandBuilder(private val operator : Char, private val commandType : CommandType){
+class CommandBuilder(private val operator : Char){
 
+    private val commandType : OperatorType = operator.toOperator()
     private val inputToCommand = ArrayList<Char>()
     var hasCommandModifier = false
 
@@ -16,7 +17,7 @@ class CommandBuilder(private val operator : Char, private val commandType : Comm
     fun tryConsumeAccordingToSyntax(ch: Char) : Boolean{
         return when (ch) {
             BitopiarySyntax.commandModifier -> consumeCommandModifier()
-            else -> return if (canConsumeInput(commandType.standardInput, ch)){
+            else -> return if (canConsumeInput(commandType.input, ch)){
                 inputToCommand.add(ch)
                 true
             } else {
@@ -69,11 +70,17 @@ class CommandBuilder(private val operator : Char, private val commandType : Comm
     }
 
     fun build(): Instruction {
-        when (operator) {
-            isBracket() -> "asda"
-            else ->
+        val type = operator.toOperator()
+        return when {
+            type.usesStack -> StackInstruction(!hasCommandModifier, inputToCommand.toInt(), type)
+            else -> StackInstruction(!hasCommandModifier, inputToCommand.toInt(), type)
         }
-        return AddInstruction(hasCommandModifier, 100, StackType.Plus)
     }
 
 }
+
+fun ArrayList<Char>.toInt() : Int = this.reversed().foldIndexed(0) {
+    index, accumulator, unProcessedChar -> accumulator + Math.pow(10.0, index.toDouble()).toInt() * Character.digit(unProcessedChar,10)
+}
+
+

@@ -36,14 +36,14 @@ class BitopiaryLexer(filePath: String) {
 
     private fun readInCommands(chars: String) {
 
-        var builder = CommandBuilder(chars[0], BitopiarySyntax.getRelevantCommandType(chars[0]))
+        var builder = CommandBuilder(chars[0])
         for (value in chars.tail) {
 
             val didConsumeChar = builder.tryConsumeAccordingToSyntax(value)
             if (!didConsumeChar) {
                 println(builder.toString())
                 commandList.add(builder)
-                builder = CommandBuilder(value, BitopiarySyntax.getRelevantCommandType(value))
+                builder = CommandBuilder(value)
             }
         }
         println(builder.toString())

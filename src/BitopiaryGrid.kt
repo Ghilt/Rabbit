@@ -11,9 +11,10 @@ class BitopiaryGrid(val width: Int, val height: Int){
     fun getInt(readHead: ReadHead, caret: Caret): Int {
         for (x in caret.x..caret.x+readHead.width){
             for (y in caret.y..caret.y+readHead.height){
-
             }
         }
+        return 0 //Filter and stuff instead of loops?
+
     }
 
     fun setInt(readHead: ReadHead, caret: Caret, value: Int) {

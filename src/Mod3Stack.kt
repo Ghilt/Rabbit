@@ -1,4 +1,4 @@
-class Mod3Stack(val environment :ExecutionTrack, val operation :(Int, Int) -> Int) {
+class Mod3Stack(private val environment :ExecutionTrack, private val operation :(Int, Int) -> Int) {
 
     private var state = 0
         set(value){ field = value%3 }
@@ -11,7 +11,7 @@ class Mod3Stack(val environment :ExecutionTrack, val operation :(Int, Int) -> In
             1 -> term = operation(term, environment.getInt())
             2 -> {
                 environment.setInt(term)
-                term = 0;
+                term = 0
             }
         }
         state++

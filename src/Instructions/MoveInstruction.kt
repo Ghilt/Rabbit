@@ -1,9 +1,9 @@
 package Instructions
 
-import StackType
-import Mod3Stack
+import ExecutionTrack
+import OperatorType
 
-class MoveInstruction(private val inputCaret: Boolean, private val input: Int?, private val direction: MoveType ) : Instruction {
+class MoveInstruction(private val inputCaret: Boolean, private val input: Int, private val direction: OperatorType) : Instruction {
 
     override fun execute(environment: ExecutionTrack) {
         if (inputCaret){

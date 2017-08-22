@@ -1,11 +1,13 @@
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class BitopiaryLexer(filePath: String) {
 
     private val commandList = ArrayList<CommandBuilder>()
+    val program = BitopiaryProgram()
 
     init {
         val stream = Files.newInputStream(Paths.get(filePath))
@@ -16,7 +18,19 @@ class BitopiaryLexer(filePath: String) {
         val chars = source.filter{x -> x in BitopiarySyntax }
         if (chars.isNotEmpty()) {
             readInCommands(chars)
-            println("ok ok    " + checkMatchingBrackets())
+            generateProgram()
+        }
+    }
+
+    private fun generateProgram() {
+        val splitTracks :ArrayList<ArrayList<CommandBuilder>> = commandList.splitTracks()
+        splitTracks.filterNot { checkMatchingBrackets(it) }.forEach { throw Error("Syntax Warning(currently flagged as error); Brackets are mismatched") }
+        for(track in splitTracks){
+            var instructions = ExecutionTrack()
+            for(command in track){
+                instructions.add(command.build())
+            }
+            program.addExecutionTrack(instructions)
         }
     }
 
@@ -37,11 +51,11 @@ class BitopiaryLexer(filePath: String) {
     }
 
 
-    private fun checkMatchingBrackets() : Boolean {
+    private fun checkMatchingBrackets(track: ArrayList<CommandBuilder>) : Boolean {
         val stack = Stack<CommandBuilder>()
 
-        for (c in commandList.filter { it.isBracket() }) {
-            if (stack.isNotEmpty() && c.matchesBracket(stack.peek())) {
+        for (c in track.filter { it.isBracket() }) {
+            if (stack.isNotEmpty() && stack.peek().matchesBracket(c)) {
                 stack.pop()
             } else {
                 stack.push(c)
@@ -52,69 +66,23 @@ class BitopiaryLexer(filePath: String) {
     }
 }
 
-class CommandBuilder(private val operator : Char, private val commandType : CommandType){
-
-    private val inputToCommand = ArrayList<Char>()
-    var hasCommandModifier = false
-
-    init {
-        if (operator == BitopiarySyntax.commandModifier) {
-            throw Error("Syntax Error; Command Modifier as command")
-        }
-    }
-
-
-    fun tryConsumeAccordingToSyntax(ch: Char) : Boolean{
-        return when (ch) {
-            BitopiarySyntax.commandModifier -> consumeCommandModifier()
-            else -> return if (canConsumeInput(commandType.standardInput, ch)){
-                inputToCommand.add(ch)
-                true
+private fun ArrayList<CommandBuilder>.splitTracks(): ArrayList<ArrayList<CommandBuilder>> {
+    var splitCounter = 0
+    val tracks = ArrayList<ArrayList<CommandBuilder>>()
+    tracks.add(ArrayList())
+    for (cb in this) {
+        if(cb.isStartParallelExecution()){
+            if (splitCounter == 0 && cb.hasCommandModifier) {
+                tracks.add(ArrayList())
             } else {
-                false
+                splitCounter = (splitCounter +1) % 3
+                tracks.last().add(cb)
             }
-        }
-    }
-
-    private fun canConsumeInput(standardInput: StandardInputType, ch: Char) : Boolean {
-        if (operator.isDigit() || inputToCommand.lastIsDigit()){
-            return ch.isDigit()
-        }
-
-        return when(standardInput) {
-            StandardInputType.Source -> !hasCommandModifier && ch.isDigit()
-            StandardInputType.Caret -> hasCommandModifier && (inputToCommand.size == 0 || inputToCommand.lastIsDigit() && ch.isDigit())
-            StandardInputType.IO -> false
-        }
-    }
-
-    private fun consumeCommandModifier(): Boolean {
-        if (hasCommandModifier || inputToCommand.isNotEmpty()) {
-            throw Error("Syntax Error; double Command Modifier")
         } else {
-            hasCommandModifier = true
-            return true
+            tracks.last().add(cb)
         }
     }
-
-    override fun toString() : String{
-        val representation = inputToCommand.toCharArray().joinToString( separator = "", transform = { x -> x.toString() })
-        return  operator + (if (hasCommandModifier) "." else "") + representation
-    }
-
-    fun isBracket(): Boolean = commandType.isBracket
-
-
-    fun matchesBracket(bracket: CommandBuilder): Boolean  = when (bracket.operator) {
-        '(' -> operator == ')'
-        ')' -> operator == '('
-        '[' -> operator == ']'
-        ']' -> operator == '['
-        '}' -> operator == '{'
-        '{' -> operator == '}'
-        else -> false
-    }
-
+    return tracks
 }
 
 //I wonder what the practise is where to keep extension things

@@ -1,5 +1,6 @@
 object BitopiarySyntax {
 
+    val parallelExecution = '#'
     val commandModifier = '.'
     val all = ArrayList<CommandType>()
 
@@ -18,7 +19,7 @@ object BitopiarySyntax {
         val executeInstruction = CommandType("!", StandardInputType.Caret, 3)
         val terminateInstruction = CommandType("¤", StandardInputType.Caret, 1)
         val caretInstructions = CommandType("\\$", StandardInputType.Caret, 1)
-        val parallelInstructions = CommandType("#", StandardInputType.Caret, 3)
+        val parallelInstructions = CommandType("$parallelExecution", StandardInputType.Caret, 3)
         val charactersInstructions = CommandType("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", StandardInputType.Caret, 3)
         all.add(moveInstructions)
         all.add(arithmeticInstructions)
@@ -51,6 +52,8 @@ object BitopiarySyntax {
         }
 
     }
+
+
 }
 
 data class CommandType(val operators: String, val standardInput: StandardInputType, val modulo: Int, val isBracket :Boolean = false)

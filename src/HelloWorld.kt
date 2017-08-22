@@ -6,29 +6,15 @@ fun main(args : Array<String>) {
 
     val pathName = "D:\\Files\\Code\\IntelliJ\\Bitopiary\\testFiles\\testLexing.bty"
 
-//    val file = File(pathName)
+//    var b = Mod3Stack(ExecutionTrack()) { x, y -> x }
 //
-//    for(line in file.readLines()){
-//        println(line)
-//
-//    }
-//
-//    println("_______")
-//
-//    val reader = file.reader()
-//        while (reader.ready()){
-//        println(message = "${reader.read().toChar()}")
-//    }
-
-//    reader.close()
-//    val stream = Files.newInputStream(Paths.get(pathName))
-//    stream.buffered().reader().use { reader ->
-//        println(reader.readText())
+//    for ( y in 1..12) {
+//        b.executeInstruction()
 //    }
 
 
     var interpreter = BitopiaryLexer(filePath = pathName)
-
+    interpreter.program.run()
     if (args.size == 0) {
         println("${'.'.isDigit()}Please provide a name as a command-line argument")
         return

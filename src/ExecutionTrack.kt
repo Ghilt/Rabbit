@@ -30,16 +30,34 @@ class ExecutionTrack {
     }
 
     fun execute() {
-        instructions[instructionCounter].execute(mod3Stacks)
+        instructions[instructionCounter].execute(this)
         instructionCounter++
     }
 
     fun getInt(): Int = grid.getInt(readHead, carets[caretCounter])
     fun setInt(value: Int) = grid.setInt(readHead, carets[caretCounter], value)
 
+    fun moveCaret(direction: MoveType) = moveCaretDistance(direction, getInt())
+
+    fun moveCaretDefault(direction: MoveType) = when (direction){
+        MoveType.North, MoveType.South -> moveCaretDistance(direction, readHead.height)
+        MoveType.East, MoveType.West -> moveCaretDistance(direction, readHead.width)
+    }
+
+    fun moveCaretDistance(direction: MoveType, distance: int) = when (direction){
+        MoveType.North -> carets[caretCounter].y += distance
+        MoveType.East -> carets[caretCounter].x += distance
+        MoveType.South -> carets[caretCounter].y -= distance
+        MoveType.West -> carets[caretCounter].x -= distance
+    }
+
 }
 
 
 enum class StackType {
     Plus, Minus, Multiplication, Divide, BitAnd, BitOr, BitXor, BitFlip
+}
+
+enum class MoveType {
+    North, East, South, West
 }

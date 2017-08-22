@@ -69,6 +69,10 @@ class CommandBuilder(private val operator : Char, private val commandType : Comm
     }
 
     fun build(): Instruction {
+        when (operator) {
+            isBracket() -> "asda"
+            else ->
+        }
         return AddInstruction(hasCommandModifier, 100, StackType.Plus)
     }
 

@@ -5,11 +5,11 @@ import Mod3Stack
 
 class AddInstruction(private val inputCaret: Boolean, private val input: Int, private val stackTarget: StackType ) : Instruction {
 
-    override fun execute(dataStacks: HashMap<StackType, Mod3Stack>) {
+    override fun execute(environment: ExecutionTrack) {
         if (inputCaret){
-            dataStacks[stackTarget]?.executeInstruction()
+            environment.dataStacks[stackTarget]?.executeInstruction()
         } else {
-            dataStacks[stackTarget]?.executeInstruction(input)
+            environment.dataStacks[stackTarget]?.executeInstruction(input)
         }
     }
 

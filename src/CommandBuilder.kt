@@ -1,4 +1,3 @@
-import Instructions.StackInstruction
 import Instructions.Instruction
 
 class CommandBuilder(private val operator : Char){
@@ -69,18 +68,9 @@ class CommandBuilder(private val operator : Char){
         return  operator == BitopiarySyntax.parallelExecution
     }
 
-    fun build(): Instruction {
-        val type = operator.toOperator()
-        return when {
-            type.usesStack -> StackInstruction(!hasCommandModifier, inputToCommand.toInt(), type)
-            else -> StackInstruction(!hasCommandModifier, inputToCommand.toInt(), type)
-        }
-    }
+    fun build(): Instruction = commandType.createInstruction(operator, hasCommandModifier, inputToCommand)
 
 }
 
-fun ArrayList<Char>.toInt() : Int = this.reversed().foldIndexed(0) {
-    index, accumulator, unProcessedChar -> accumulator + Math.pow(10.0, index.toDouble()).toInt() * Character.digit(unProcessedChar,10)
-}
 
 

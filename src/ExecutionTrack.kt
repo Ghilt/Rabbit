@@ -8,6 +8,8 @@ class ExecutionTrack {
     var carets = ArrayList<Caret>()
     val readHead = ReadHead()
     var mod3Stacks = HashMap<OperatorType, Mod3Stack>()
+    var copyStack = CopyStack(this)
+    var loopStack = LoopStack(this)
     val instructions = ArrayList<Instruction>()
 
     init {
@@ -31,7 +33,8 @@ class ExecutionTrack {
 
     fun execute() {
         if(instructionCounter < instructions.size){
-            instructions[instructionCounter].execute(this)
+            var instr = instructions[instructionCounter]
+            instr.execute(this)
             instructionCounter++
         }
     }
@@ -53,6 +56,18 @@ class ExecutionTrack {
         OperatorType.MOVE_DOWN -> carets[caretCounter].y -= distance
         OperatorType.MOVE_LEFT -> carets[caretCounter].x -= distance
         else -> throw Error("Error; OperatorType Exception $direction")
+    }
+
+    fun modifyData(varyBy: (Int) -> Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun getExecutionCaret(): Caret {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun setExecutionCaret(caret: Caret) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }

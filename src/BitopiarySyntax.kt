@@ -1,3 +1,6 @@
+import Instructions.*
+import Extensions.*
+
 object BitopiarySyntax {
 
     val parallelExecution = '#'
@@ -94,66 +97,98 @@ enum class StandardInputType {
 enum class OperatorType {
     MOVE_RIGHT {
         override val input = StandardInputType.Source
+        override val instructionConstructor = ::MoveInstruction
     },
     MOVE_LEFT {
         override val input = StandardInputType.Source
+        override val instructionConstructor = ::MoveInstruction
     },
     MOVE_UP {
         override val input = StandardInputType.Source
+        override val instructionConstructor = ::MoveInstruction
     },
     MOVE_DOWN {
         override val input = StandardInputType.Source
+        override val instructionConstructor = ::MoveInstruction
     },
     ADD {
         override val usesStack = true
+        override val instructionConstructor = ::StackInstruction
     },
     MULTIPLY {
         override val usesStack = true
+        override val instructionConstructor = ::StackInstruction
     },
     SUBTRACT {
         override val usesStack = true
+        override val instructionConstructor = ::StackInstruction
     },
     DIVIDE {
         override val usesStack = true
+        override val instructionConstructor = ::StackInstruction
     },
     MODULO {
         override val usesStack = true
+        override val instructionConstructor = ::StackInstruction
     },
     AND {
         override val usesStack = true
+        override val instructionConstructor = ::StackInstruction
     },
     OR {
         override val usesStack = true
+        override val instructionConstructor = ::StackInstruction
     },
     XOR {
         override val usesStack = true
+        override val instructionConstructor = ::StackInstruction
     },
     FLIP {
         override val usesStack = true
+        override val instructionConstructor = ::StackInstruction
     },
-    INCREASE,
-    DECREASE,
-    COPY,
-    STORE,
-    READ_INPUT,
-    PRINT_OUTPUT,
+    INCREASE{
+        override val input = StandardInputType.Source
+        override val instructionConstructor = ::VaryInstruction},
+    DECREASE{
+        override val input = StandardInputType.Source
+        override val instructionConstructor = ::VaryInstruction},
+    COPY{ override val instructionConstructor = ::CopyInstruction},
+    STORE {
+        override val input = StandardInputType.Source
+        override val instructionConstructor = ::StoreInstruction
+    },
+    READ_INPUT {
+        override val input = StandardInputType.IO
+        override val instructionConstructor = ::ReadInstruction
+    },
+    PRINT_OUTPUT {
+        override val input = StandardInputType.IO
+        override val instructionConstructor = ::PrintInstruction
+    },
     BEGIN_LOOP {
         override val isBracket = true
+        override val instructionConstructor = ::BracketInstruction
     },
     END_LOOP {
         override val isBracket = true
+        override val instructionConstructor = ::BracketInstruction
     },
     BEGIN_Q_LOOP {
         override val isBracket = true
+        override val instructionConstructor = ::BracketInstruction
     },
     END_Q_LOOP {
         override val isBracket = true
+        override val instructionConstructor = ::BracketInstruction
     },
     BEGIN_IF {
         override val isBracket = true
+        override val instructionConstructor = ::BracketInstruction // maybe its own instruction
     },
     END_IF {
         override val isBracket = true
+        override val instructionConstructor = ::BracketInstruction
     },
     CONFIGURE_READHEAD{
         override val input = StandardInputType.Source
@@ -172,5 +207,10 @@ enum class OperatorType {
     open val input: StandardInputType = StandardInputType.Caret
     open val usesStack: Boolean = false
     open val isBracket: Boolean = false
+    abstract val instructionConstructor: (op: Char, modify: Boolean, input: ArrayList<Char>, type: OperatorType) -> Instruction
+
+    fun createInstruction(op: Char, modify: Boolean, input: ArrayList<Char>, type: OperatorType) : Instruction {
+        return instructionConstructor(op, modify, input, type)
+    }
 
 }

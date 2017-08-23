@@ -2,17 +2,18 @@ package Instructions
 
 import ExecutionTrack
 import OperatorType
+import Extensions.*
 
-class MoveInstruction(private val inputCaret: Boolean, private val input: Int, private val direction: OperatorType) : Instruction {
+class MoveInstruction(operator: Char, inputCaret: Boolean, input: ArrayList<Char>, type: OperatorType) : Instruction(operator, inputCaret, input, type) {
 
     override fun execute(environment: ExecutionTrack) {
-        if (inputCaret){
-            environment.moveCaret(direction)
-        } else if (input != null){
-            environment.moveCaretDefault(direction)
-        } else {
-            environment.moveCaret(direction, input)
+
+        when {
+            inputCaret -> environment.moveCaret(type)
+            input.isEmpty() -> environment.moveCaretDefault(type)
+            else -> environment.moveCaret(type, input.toInt())
         }
     }
 
 }
+

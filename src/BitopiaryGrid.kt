@@ -9,10 +9,11 @@ class BitopiaryGrid(val width: Int, val height: Int){
     }
 
     fun getInt(readHead: ReadHead, caret: Caret): Int {
-        for (x in caret.x..caret.x+readHead.width){
-            for (y in caret.y..caret.y+readHead.height){
+        for (x in caret.x..caret.x + readHead.width){
+            for (y in caret.y..caret.y + readHead.height){
             }
         }
+        grid.filterIndexed { index, _ ->  index in caret.x..caret.x + readHead.width}.flatMap{ array -> array.filterIndexed{ index, _ ->  index in caret.y..caret.y + readHead.height}.toMutableList()}
         return 0 //Filter and stuff instead of loops?
 
     }

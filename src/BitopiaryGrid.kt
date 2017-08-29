@@ -9,16 +9,35 @@ class BitopiaryGrid(val width: Int, val height: Int){
     }
 
     fun getInt(readHead: ReadHead, caret: Caret): Int {
-        for (x in caret.x..caret.x + readHead.width){
-            for (y in caret.y..caret.y + readHead.height){
-            }
-        }
-        grid.filterIndexed { index, _ ->  index in caret.x..caret.x + readHead.width}.flatMap{ array -> array.filterIndexed{ index, _ ->  index in caret.y..caret.y + readHead.height}.toMutableList()}
-        return 0 //Filter and stuff instead of loops?
+        //this isn't readable kotlin? but how do you want it!?
+        val bitList = grid.filterIndexed { index, _ ->  index in caret.y until caret.y + readHead.height}.flatMap{ array -> array.filterIndexed{ index, _ ->  index in caret.x until caret.x + readHead.width}.toList()}
+        return transformToInt(bitList)
 
     }
 
+    private fun transformToInt(bits: List<Boolean>) = Integer.parseInt(bits.joinToString("") {b -> if (b) "1" else "0" }, 2)
+
     fun setInt(readHead: ReadHead, caret: Caret, value: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val leastSignificantFirst = Integer.toBinaryString(value).reversed()
+        var bitIndex = 0
+        for (y in caret.y + readHead.height-1 downTo caret.y){
+            for (x in caret.x + readHead.width-1 downTo caret.x){
+                grid[y][x] = leastSignificantFirst[bitIndex] == '1'
+                bitIndex++
+                if(bitIndex >= leastSignificantFirst.length){
+                    return
+                }
+            }
+        }
+    }
+
+    fun debugPrint(width: Int, height: Int){
+        for (y in 0..height){
+            for (x in 0..width){
+                print(if (grid[y][x]) "1 " else "_ " )
+            }
+            println()
+        }
+        println(".")
     }
 }

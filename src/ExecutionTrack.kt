@@ -13,6 +13,7 @@ class ExecutionTrack {
     val instructions = ArrayList<Instruction>()
 
     init {
+        carets.add(Caret(0,0))
         mod3Stacks.put(OperatorType.ADD, Mod3Stack(this, { x, y -> x + y}))
         mod3Stacks.put(OperatorType.SUBTRACT, Mod3Stack(this,{ x, y -> x - y}))
         mod3Stacks.put(OperatorType.MULTIPLY, Mod3Stack(this,{ x, y -> x * y}))
@@ -32,7 +33,8 @@ class ExecutionTrack {
     }
 
     fun execute() {
-        if(instructionCounter < instructions.size){
+        while (instructionCounter < instructions.size){
+            grid.debugPrint(10, 10)
             var instr = instructions[instructionCounter]
             instr.execute(this)
             instructionCounter++
@@ -40,7 +42,7 @@ class ExecutionTrack {
     }
 
     fun getInt(): Int = grid.getInt(readHead, carets[caretCounter])
-    fun setInt(value: Int) = grid.setInt(readHead, carets[caretCounter], value)
+    fun setValue(value: Int) = grid.setInt(readHead, carets[caretCounter], value)
 
     fun moveCaret(direction: OperatorType) = moveCaret(direction, getInt())
 
@@ -68,6 +70,10 @@ class ExecutionTrack {
 
     fun setExecutionCaret(caret: Caret) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun print() {
+        println("printing : ${getInt()}")
     }
 
 }

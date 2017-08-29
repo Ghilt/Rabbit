@@ -76,6 +76,8 @@ fun Char.toOperator(): OperatorType = when(this) {
     '!' -> OperatorType.EXECUTE
     '¤' -> OperatorType.EXIT_EXECUTION
     '?' -> OperatorType.QUERY_ENVIRONMENT
+    ':' -> OperatorType.PRINT_OUTPUT
+    '=' -> OperatorType.READ_INPUT
     '#' -> OperatorType.START_FUNCTION
     '.' -> OperatorType.MODIFIER
     '0','1','2','3','4','5','6','7','8','9',
@@ -191,18 +193,35 @@ enum class OperatorType {
         override val instructionConstructor = ::BracketInstruction
     },
     CONFIGURE_READHEAD{
+        override val instructionConstructor = ::BracketInstruction
         override val input = StandardInputType.Source
     },
-    EXECUTE,
-    EXIT_EXECUTION,
-    NEW_CARET,
-    CHANGE_CARET,
+    EXECUTE{
+        override val instructionConstructor = ::BracketInstruction // TODO
+    },
+    EXIT_EXECUTION{
+        override val instructionConstructor = ::BracketInstruction // TODO
+    },
+    NEW_CARET{
+        override val instructionConstructor = ::BracketInstruction // TODO
+    },
+    CHANGE_CARET{
+        override val instructionConstructor = ::BracketInstruction // TODO
+    },
     QUERY_ENVIRONMENT{
         override val input = StandardInputType.Source
+        override val instructionConstructor = ::BracketInstruction // TODO
+
     },
-    START_FUNCTION,
-    CHARACTER,
-    MODIFIER;
+    START_FUNCTION{
+        override val instructionConstructor = ::BracketInstruction // TODO
+    },
+    CHARACTER{
+        override val instructionConstructor = ::CharacterInstruction // TODO
+    },
+    MODIFIER{
+        override val instructionConstructor = ::BracketInstruction // TODO
+    };
 
     open val input: StandardInputType = StandardInputType.Caret
     open val usesStack: Boolean = false

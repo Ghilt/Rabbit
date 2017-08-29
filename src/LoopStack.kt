@@ -24,7 +24,7 @@ class LoopStack(private val environment :ExecutionTrack) {
         false -> endLoopIteration(instruction)
     }
 
-    private fun startLoopIteration(instruction: BracketInstruction) = when (instruction.inputCaret){
+    private fun startLoopIteration(instruction: BracketInstruction) = when (instruction.modifyInputChannel){
         true -> stack.add(LoopMarker(0, instruction, environment.getInt(), environment.getExecutionCaret()))
         false -> stack.add(LoopMarker(0, instruction, instruction.input.toInt(), environment.getExecutionCaret()))
     }

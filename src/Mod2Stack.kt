@@ -8,7 +8,7 @@ class CopyStack(private val environment :ExecutionTrack) {
     fun executeInstruction() {
         when (state) {
             0 -> term = environment.getInt()
-            1 -> environment.setInt(term)
+            1 -> environment.setValue(term)
         }
         state++
     }
@@ -17,7 +17,7 @@ class CopyStack(private val environment :ExecutionTrack) {
         when (state) {
             0 -> term += input
             1 -> {
-                environment.setInt(term)
+                environment.setValue(term)
                 state++
             }
         }

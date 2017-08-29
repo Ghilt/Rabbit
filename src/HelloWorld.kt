@@ -1,6 +1,7 @@
 import java.io.File
 import java.nio.file.Paths
 import java.nio.file.Files
+import Extensions.*
 
 fun main(args : Array<String>) {
 
@@ -11,6 +12,8 @@ fun main(args : Array<String>) {
 //    for ( y in 1..12) {
 //        b.executeInstruction()
 //    }
+
+    println("${Integer.parseInt("000000000000000")} + hi" )
 
     val inputToCommand = ArrayList<Char>()
     inputToCommand.add('9')

@@ -10,7 +10,7 @@ class Mod3Stack(private val environment :ExecutionTrack, private val operation :
             0 -> term += environment.getInt()
             1 -> term = operation(term, environment.getInt())
             2 -> {
-                environment.setInt(term)
+                environment.setValue(term)
                 term = 0
             }
         }

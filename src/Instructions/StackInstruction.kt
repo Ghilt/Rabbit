@@ -4,13 +4,13 @@ import OperatorType
 import ExecutionTrack
 import Extensions.*
 
-class StackInstruction(operator: Char, inputCaret: Boolean, input: ArrayList<Char>, type: OperatorType) : Instruction(operator, inputCaret, input, type) {
+class StackInstruction(operator: Char, modifyInputChannel: Boolean, input: ArrayList<Char>, type: OperatorType) : Instruction(operator, modifyInputChannel, input, type) {
 
     override fun execute(environment: ExecutionTrack) {
-        if (inputCaret){
-            environment.mod3Stacks[type]?.executeInstruction()
-        } else {
+        if (modifyInputChannel){
             environment.mod3Stacks[type]?.executeInstruction(input.toInt())
+        } else {
+            environment.mod3Stacks[type]?.executeInstruction()
         }
     }
 

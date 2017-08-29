@@ -4,12 +4,12 @@ import ExecutionTrack
 import OperatorType
 import Extensions.*
 
-class MoveInstruction(operator: Char, inputCaret: Boolean, input: ArrayList<Char>, type: OperatorType) : Instruction(operator, inputCaret, input, type) {
+class MoveInstruction(operator: Char, modifyInputChannel: Boolean, input: ArrayList<Char>, type: OperatorType) : Instruction(operator, modifyInputChannel, input, type) {
 
     override fun execute(environment: ExecutionTrack) {
 
         when {
-            inputCaret -> environment.moveCaret(type)
+            modifyInputChannel -> environment.moveCaret(type)
             input.isEmpty() -> environment.moveCaretDefault(type)
             else -> environment.moveCaret(type, input.toInt())
         }

@@ -7,17 +7,15 @@ import Extensions.*
 class LoopStack(private val environment :ExecutionTrack) {
 
     data class LoopMarker(var counter: Int, val instruction: BracketInstruction, var value: Int, val startLoopCaret: Caret) {
-        fun matches(instruction: BracketInstruction): Boolean {
-            //TODO
-            return true
-        }
+
+        fun matches(other: BracketInstruction): Boolean = other.type.matches(instruction.type)
 
         fun increaseLoopCounter() {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            counter++
         }
     }
 
-    val stack = Stack<LoopMarker>()
+    private val stack = Stack<LoopMarker>()
 
     fun executeLoopInstruction(instruction: BracketInstruction) = when (stack.isEmpty() || !stack.peek().matches(instruction)) {
         true -> startLoopIteration(instruction)
@@ -33,11 +31,13 @@ class LoopStack(private val environment :ExecutionTrack) {
     private fun endLoopIteration(endInstruction: BracketInstruction){
         val (counter, startInstruction, value, caret) = stack.peek()
 
-        if (startInstruction.stopLooping(counter, endInstruction.getValue())){
+        if (startInstruction.shouldStopLooping(counter, endInstruction.getValue())){
             stack.pop()
         } else {
             stack.peek().increaseLoopCounter()
             environment.setExecutionCaret(caret)
+            TODO("not implemented, time to loop it up, probably shange entire structure for reading instructions")
+
         }
 
     }

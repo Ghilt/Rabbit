@@ -23,7 +23,6 @@ fun main(args : Array<String>) {
     inputToCommand.add('0')
     inputToCommand.add('4')
 
-
     print("${'2'.toInt()}HIIIII   ${inputToCommand.toInt()} and the beat goes on\n")
     print("${'2'.toInt()}HIIIII   ${inputToCommand.toInt()} and the beat goes on\n")
 

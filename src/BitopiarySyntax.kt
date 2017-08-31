@@ -170,26 +170,32 @@ enum class OperatorType {
     },
     BEGIN_LOOP {
         override val isBracket = true
+        override fun matches(type: OperatorType) = type == END_LOOP
         override val instructionConstructor = ::BracketInstruction
     },
     END_LOOP {
         override val isBracket = true
+        override fun matches(type: OperatorType) = type == BEGIN_LOOP
         override val instructionConstructor = ::BracketInstruction
     },
     BEGIN_Q_LOOP {
         override val isBracket = true
+        override fun matches(type: OperatorType) = type == END_Q_LOOP
         override val instructionConstructor = ::BracketInstruction
     },
     END_Q_LOOP {
         override val isBracket = true
+        override fun matches(type: OperatorType) = type == BEGIN_Q_LOOP
         override val instructionConstructor = ::BracketInstruction
     },
     BEGIN_IF {
         override val isBracket = true
+        override fun matches(type: OperatorType) = type == END_IF
         override val instructionConstructor = ::BracketInstruction // maybe its own instruction
     },
     END_IF {
         override val isBracket = true
+        override fun matches(type: OperatorType) = type == BEGIN_IF
         override val instructionConstructor = ::BracketInstruction
     },
     CONFIGURE_READHEAD{
@@ -217,7 +223,7 @@ enum class OperatorType {
         override val instructionConstructor = ::BracketInstruction // TODO
     },
     CHARACTER{
-        override val instructionConstructor = ::CharacterInstruction // TODO
+        override val instructionConstructor = ::CharacterInstruction
     },
     MODIFIER{
         override val instructionConstructor = ::BracketInstruction // TODO
@@ -231,5 +237,7 @@ enum class OperatorType {
     fun createInstruction(op: Char, modify: Boolean, input: ArrayList<Char>, type: OperatorType) : Instruction {
         return instructionConstructor(op, modify, input, type)
     }
+
+    open fun matches(type: OperatorType): Boolean = false
 
 }

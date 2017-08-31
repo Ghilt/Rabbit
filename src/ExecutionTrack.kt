@@ -1,3 +1,4 @@
+import Instructions.BracketInstruction
 import Instructions.Instruction
 
 class ExecutionTrack {
@@ -6,6 +7,7 @@ class ExecutionTrack {
     var instructionCounter = 0
     var caretCounter = 0
     var carets = ArrayList<Caret>()
+    var executionPointer = Caret(0,0)
     val readHead = ReadHead()
     var mod3Stacks = HashMap<OperatorType, Mod3Stack>()
     var copyStack = CopyStack(this)
@@ -18,6 +20,7 @@ class ExecutionTrack {
         mod3Stacks.put(OperatorType.SUBTRACT, Mod3Stack(this,{ x, y -> x - y}))
         mod3Stacks.put(OperatorType.MULTIPLY, Mod3Stack(this,{ x, y -> x * y}))
         mod3Stacks.put(OperatorType.DIVIDE, Mod3Stack(this,{ x, y -> x / y}))
+        mod3Stacks.put(OperatorType.MODULO, Mod3Stack(this,{ x, y -> x % y}))
         mod3Stacks.put(OperatorType.AND, Mod3Stack(this,{ x, y -> x and y}))
         mod3Stacks.put(OperatorType.OR, Mod3Stack(this,{ x, y -> x or y}))
         mod3Stacks.put(OperatorType.XOR, Mod3Stack(this,{ x, y -> x xor y}))
@@ -64,17 +67,19 @@ class ExecutionTrack {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    fun getExecutionCaret(): Caret {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    fun getExecutionCaret(): Caret = executionPointer
 
     fun setExecutionCaret(caret: Caret) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        executionPointer.x = caret.x
+        executionPointer.y = caret.y
     }
 
     fun print() {
         println("printing : ${getInt()}")
     }
+
+    fun executeLoopInstruction(bracketInstruction: BracketInstruction) = loopStack.executeLoopInstruction(bracketInstruction)
+
 
 }
 

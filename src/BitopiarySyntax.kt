@@ -5,42 +5,6 @@ object BitopiarySyntax {
 
     val parallelExecution = '#'
     val commandModifier = '.'
-//    private val all = ArrayList<CommandType>()
-//
-//    init{
-//
-//        val moveInstructions = CommandType("><_^", StandardInputType.Source, 1)
-//        val arithmeticInstructions = CommandType("+*-/%", StandardInputType.Caret, 3, usesStack = true)
-//        val bitInstructions = CommandType("~@¨\"", StandardInputType.Caret, 3, usesStack = true)
-//        val modifyBlockInstructions = CommandType("|',", StandardInputType.Caret, 1)
-//        val copyInstruction = CommandType("&", StandardInputType.Caret, 1)
-//        val readInstruction = CommandType("=", StandardInputType.IO, 1)
-//        val printInstruction = CommandType(":", StandardInputType.Caret, 1)
-//        val loopInstructions = CommandType("()[]", StandardInputType.Caret, 1, true)
-//        val ifInstruction = CommandType("{}", StandardInputType.Caret, 1, true)
-//        val environmentInstructions = CommandType("£?", StandardInputType.Source, 1)
-//        val executeInstruction = CommandType("!", StandardInputType.Caret, 3)
-//        val terminateInstruction = CommandType("¤", StandardInputType.Caret, 1)
-//        val caretInstructions = CommandType("\\$", StandardInputType.Caret, 1)
-//        val parallelInstructions = CommandType("$parallelExecution", StandardInputType.Caret, 3)
-//        val charactersInstructions = CommandType("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", StandardInputType.Caret, 1)
-//        all.add(moveInstructions)
-//        all.add(arithmeticInstructions)
-//        all.add(bitInstructions)
-//        all.add(modifyBlockInstructions)
-//        all.add(copyInstruction)
-//        all.add(readInstruction)
-//        all.add(printInstruction)
-//        all.add(loopInstructions)
-//        all.add(ifInstruction)
-//        all.add(environmentInstructions)
-//        all.add(executeInstruction)
-//        all.add(terminateInstruction)
-//        all.add(caretInstructions)
-//        all.add(parallelInstructions)
-//        all.add(charactersInstructions)
-//
-//    }
 
     operator fun contains(ch :Char) : Boolean{
         return OperatorType.values().contains(ch.toOperator()) //Don't optimize when you don't need to right/know what you are doing
@@ -74,7 +38,7 @@ fun Char.toOperator(): OperatorType = when(this) {
     ']' -> OperatorType.END_LOOP
     ')' -> OperatorType.END_Q_LOOP
     '!' -> OperatorType.EXECUTE
-    '¤' -> OperatorType.EXIT_EXECUTION
+    '¤', 0.toChar() -> OperatorType.EXIT_EXECUTION
     '?' -> OperatorType.QUERY_ENVIRONMENT
     ':' -> OperatorType.PRINT_OUTPUT
     '=' -> OperatorType.READ_INPUT
@@ -87,10 +51,8 @@ fun Char.toOperator(): OperatorType = when(this) {
     'e','f','g','h','i','j','k','l','m','n',
     'o','p','q','r','s','t','u','v','w','x',
     'y','z' -> OperatorType.CHARACTER
-    else -> throw Error("Syntax Error: character is not allowed ${this}")
+    else -> throw Error("Syntax Error: character is not allowed ${this}, ${this.toInt()}")
 }
-
-data class CommandType(val operators: String, val standardInput: StandardInputType, val modulo: Int, val isBracket: Boolean = false, val usesStack: Boolean = false)
 
 enum class StandardInputType {
     Source, Caret, IO
@@ -206,7 +168,7 @@ enum class OperatorType {
         override val instructionConstructor = ::BracketInstruction // TODO
     },
     EXIT_EXECUTION{
-        override val instructionConstructor = ::BracketInstruction // TODO
+        override val instructionConstructor = ::TerminateExecutionInstruction
     },
     NEW_CARET{
         override val instructionConstructor = ::BracketInstruction // TODO

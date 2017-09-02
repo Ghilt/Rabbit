@@ -3,16 +3,16 @@ import Instructions.Instruction
 
 class ExecutionTrack {
 
+    var isTerminated = false
     lateinit var grid :BitopiaryGrid
-    var instructionCounter = 0
     var caretCounter = 0
     var carets = ArrayList<Caret>()
     var executionPointer = Caret(0,0)
+    var executionDirection: OperatorType = OperatorType.MOVE_RIGHT
     val readHead = ReadHead()
     var mod3Stacks = HashMap<OperatorType, Mod3Stack>()
     var copyStack = CopyStack(this)
     var loopStack = LoopStack(this)
-    val instructions = ArrayList<Instruction>()
 
     init {
         carets.add(Caret(0,0))
@@ -27,21 +27,17 @@ class ExecutionTrack {
         //mod3Stacks.put(StackType.BitFlip, Mod3Stack(this,{ x, y -> x flipIt y})) TODO
     }
 
-    fun add(command: Instruction) {
-        instructions.add(command)
-    }
 
     fun bind(grid: BitopiaryGrid) {
         this.grid = grid
     }
 
     fun execute() {
-        while (instructionCounter < instructions.size){
-            grid.debugPrint(10, 10)
-            var instr = instructions[instructionCounter]
-            instr.execute(this)
-            instructionCounter++
-        }
+        val (size, instruction) = CommandBuilder.readInstructionFromMemory(grid, readHead, executionPointer ,executionDirection)
+        executionPointer.moveCaret(executionDirection, readHead, size)
+        Logger.l("Executing Instruction: ${instruction::class.qualifiedName}")
+        instruction.execute(this)
+
     }
 
     fun getInt(): Int = grid.getInt(readHead, carets[caretCounter])
@@ -49,19 +45,9 @@ class ExecutionTrack {
 
     fun moveCaret(direction: OperatorType) = moveCaret(direction, getInt())
 
-    fun moveCaretDefault(direction: OperatorType) = when (direction){
-        OperatorType.MOVE_UP, OperatorType.MOVE_DOWN -> moveCaret(direction, readHead.height)
-        OperatorType.MOVE_RIGHT, OperatorType.MOVE_LEFT -> moveCaret(direction, readHead.width)
-        else -> throw Error("Error; OperatorType Exception $direction")
-    }
+    fun moveCaretDefault(direction: OperatorType) = carets[caretCounter].moveCaret(direction, readHead)
 
-    fun moveCaret(direction: OperatorType, distance: Int) = when (direction){
-        OperatorType.MOVE_UP -> carets[caretCounter].y += distance
-        OperatorType.MOVE_RIGHT -> carets[caretCounter].x += distance
-        OperatorType.MOVE_DOWN -> carets[caretCounter].y -= distance
-        OperatorType.MOVE_LEFT -> carets[caretCounter].x -= distance
-        else -> throw Error("Error; OperatorType Exception $direction")
-    }
+    fun moveCaret(direction: OperatorType, distance: Int) = carets[caretCounter].moveCaret(direction, distance)
 
     fun modifyData(varyBy: (Int) -> Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -79,6 +65,17 @@ class ExecutionTrack {
     }
 
     fun executeLoopInstruction(bracketInstruction: BracketInstruction) = loopStack.executeLoopInstruction(bracketInstruction)
+
+    fun loadInstructionTrackIntoMemory(chars: String) {
+        for(index in 0 until chars.length){
+            grid.setInt(readHead, Caret(index ,0, readHead), chars[index].toInt())
+        }
+        Logger.l(grid)
+    }
+
+    fun terminate(){
+        isTerminated = true
+    }
 
 
 }

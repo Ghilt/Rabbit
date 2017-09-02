@@ -36,7 +36,7 @@ class LoopStack(private val environment :ExecutionTrack) {
         } else {
             stack.peek().increaseLoopCounter()
             environment.setExecutionCaret(caret)
-            TODO("not implemented, time to loop it up, probably shange entire structure for reading instructions")
+            TODO("not implemented, time to loop it up, probably change entire structure for reading instructions")
 
         }
 

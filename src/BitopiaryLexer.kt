@@ -6,7 +6,6 @@ import kotlin.collections.ArrayList
 
 class BitopiaryLexer(filePath: String) {
 
-    private val commandList = ArrayList<CommandBuilder>()
     val program = BitopiaryProgram()
 
     init {
@@ -17,25 +16,13 @@ class BitopiaryLexer(filePath: String) {
         }
         val chars = source.filter{x -> x in BitopiarySyntax }
         if (chars.isNotEmpty()) {
-            readInCommands(chars)
-            generateProgram()
+            logOriginalSource(chars)
+            loadSourceIntoProgramMemory(chars, program.grid)
         }
     }
 
-    private fun generateProgram() {
-        val splitTracks :ArrayList<ArrayList<CommandBuilder>> = commandList.splitTracks()
-        splitTracks.filterNot { checkMatchingBrackets(it) }.forEach { throw Error("Syntax Warning(currently flagged as error); Brackets are mismatched") }
-        for(track in splitTracks){
-            var instructions = ExecutionTrack()
-            for(command in track){
-                instructions.add(command.build())
-            }
-            program.addExecutionTrack(instructions)
-        }
-    }
-
-    private fun readInCommands(chars: String) {
-
+    private fun logOriginalSource(chars: String) {
+        val commandList = ArrayList<CommandBuilder>()
         var builder = CommandBuilder(chars[0])
         for (value in chars.tail) {
 
@@ -48,8 +35,16 @@ class BitopiaryLexer(filePath: String) {
         }
         println(builder.toString())
         commandList.add(builder)
+        val splitTracks :ArrayList<ArrayList<CommandBuilder>> = commandList.splitTracks()
+        splitTracks.filterNot { checkMatchingBrackets(it) }.forEach { throw Error("Syntax Warning; Brackets potentially mismatched") }
     }
 
+    private fun loadSourceIntoProgramMemory(chars: String, grid: BitopiaryGrid) {
+        val instructions = ExecutionTrack()
+        instructions.bind(grid)
+        instructions.loadInstructionTrackIntoMemory(chars)
+        program.addExecutionTrack(instructions)
+    }
 
     private fun checkMatchingBrackets(track: ArrayList<CommandBuilder>) : Boolean {
         val stack = Stack<CommandBuilder>()

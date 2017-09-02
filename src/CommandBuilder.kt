@@ -2,6 +2,28 @@ import Instructions.Instruction
 
 class CommandBuilder(private val operator : Char){
 
+    companion object {
+        data class InstructionInfo(val size: Int, val instruction: Instruction)
+        fun readInstructionFromMemory(grid: BitopiaryGrid, readHead: ReadHead, caret: Caret, executionDirection: OperatorType): InstructionInfo {
+            val position = Caret(caret)
+            var size = 0;
+            val builder = CommandBuilder(grid.getChar(readHead, position))
+            while (true){
+                size++
+                position.moveCaret(executionDirection, readHead)
+
+                val didConsumeChar = builder.tryConsumeAccordingToSyntax(grid.getChar(readHead, position))
+                if (!didConsumeChar) {
+                    Logger.l("Read instruction: " + builder.toString())
+                    break
+                }
+            }
+
+            return InstructionInfo(size , builder.build())
+        }
+    }
+
+
     private val commandType : OperatorType = operator.toOperator()
     private val inputToCommand = ArrayList<Char>()
     var hasCommandModifier = false

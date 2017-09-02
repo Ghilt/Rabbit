@@ -10,9 +10,9 @@ class BitopiaryProgram {
     }
 
     fun run(){
-        for (track in tracks) {
-            track.execute()
+        while (tracks.isNotEmpty()) {
+            tracks.forEach { it.execute()}
+            tracks.removeAll(tracks.filter { it.isTerminated })
         }
     }
-
 }

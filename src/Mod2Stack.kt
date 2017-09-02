@@ -19,6 +19,7 @@ class CopyStack(private val environment :ExecutionTrack) {
             1 -> {
                 environment.setValue(term)
                 state++
+                TODO("Undefined behaviour for copy")
             }
         }
         state++

@@ -43,9 +43,7 @@ class BitopiaryGrid(val width: Int, val height: Int){
 
     fun setInt(readHead: ReadHead, caret: Caret, value: Int) {
         val leastSignificantFirst = Integer.toBinaryString(value).reversed().padEnd(readHead.size, '0')
-        if(leastSignificantFirst.equals("10000000")){
-            var bla = true
-        }
+
         var bitIndex = 0
         for (y in caret.y + readHead.height-1 downTo caret.y){
             for (x in caret.x + readHead.width-1 downTo caret.x){
@@ -62,6 +60,28 @@ class BitopiaryGrid(val width: Int, val height: Int){
         for (y in 0..height){
             for (x in 0..width){
                 print(if (grid[y][x]) "1 " else "_ " )
+            }
+            println()
+        }
+        println(".")
+    }
+
+    fun debugPrint(mem: Caret, exec: Caret, width: Int = 40, height: Int = 5) {
+        for (y in 0..height){
+            for (x in 0..width){
+                val isMem = x == mem.x && y == mem.y
+                val isExec = x == exec.x && y == exec.y
+
+                var addon = " "
+                if (isMem && isExec) {
+                    addon = "b"
+                } else if (isMem) {
+                    addon = "m"
+                } else if (isExec) {
+                    addon = "x"
+                }
+                print(if (grid[y][x]) "1$addon" else "_$addon" )
+
             }
             println()
         }

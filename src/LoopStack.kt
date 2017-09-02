@@ -22,22 +22,24 @@ class LoopStack(private val environment :ExecutionTrack) {
         false -> endLoopIteration(instruction)
     }
 
-    private fun startLoopIteration(instruction: BracketInstruction) = when (instruction.modifyInputChannel){
-        true -> stack.add(LoopMarker(0, instruction, environment.getInt(), environment.getExecutionCaret()))
-        false -> stack.add(LoopMarker(0, instruction, instruction.input.toInt(), environment.getExecutionCaret()))
+    private fun startLoopIteration(instruction: BracketInstruction) {
+//        val relevantValue = if (instruction.modifyInputChannel) environment.getInt() else instruction.input.toInt()
+        val relevantValue = when (instruction.modifyInputChannel) {
+            true -> instruction.input.toInt()
+            false -> environment.getInt()
+        }
+        stack.add(LoopMarker(0, instruction, relevantValue, environment.getExecutionCaretPosition()))
     }
 
-
     private fun endLoopIteration(endInstruction: BracketInstruction){
-        val (counter, startInstruction, value, caret) = stack.peek()
+        val (counter, startInstruction, valueOfStart, caret) = stack.peek()
 
-        if (startInstruction.shouldStopLooping(counter, endInstruction.getValue())){
+        val valueOfEnd = endInstruction.getValue(environment.getInt())
+        if (startInstruction.conditionMet(counter, valueOfStart, valueOfEnd)){
             stack.pop()
         } else {
             stack.peek().increaseLoopCounter()
             environment.setExecutionCaret(caret)
-            TODO("not implemented, time to loop it up, probably change entire structure for reading instructions")
-
         }
 
     }

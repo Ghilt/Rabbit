@@ -9,15 +9,18 @@ class BracketInstruction(operator: Char, modifyInputChannel: Boolean, input: Arr
         environment.executeLoopInstruction(this)
     }
 
-    fun shouldStopLooping(counter: Int, value: Int): Boolean{
+    fun conditionMet(counter: Int, valueOfStart: Int, valueOfEnd: Int): Boolean{
         return when (type) {
-            OperatorType.BEGIN_Q_LOOP, OperatorType.END_Q_LOOP -> counter == input.toInt()
-            else -> TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            OperatorType.BEGIN_Q_LOOP -> counter == valueOfStart
+            OperatorType.END_Q_LOOP -> counter == valueOfEnd
+            OperatorType.BEGIN_LOOP -> valueOfStart == valueOfEnd
+            OperatorType.END_LOOP -> valueOfStart != valueOfEnd
+            else -> TODO("not implemented, If statment prolly")
         }
     }
 
-    fun getValue(): Int = when (modifyInputChannel) {
+    fun getValue(valueAtCaret: Int): Int = when (modifyInputChannel) {
         true -> input.toInt()
-        false ->  TODO("not implemented, probably need to have executiontrack in this context")
+        false ->  valueAtCaret
     }
 }

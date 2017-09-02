@@ -5,13 +5,13 @@ class ExecutionTrack {
 
     var isTerminated = false
     lateinit var grid :BitopiaryGrid
-    var caretCounter = 0
-    var carets = ArrayList<Caret>()
-    var executionPointer = Caret(0,0)
-    var executionDirection: OperatorType = OperatorType.MOVE_RIGHT
-    val readHead = ReadHead()
-    var mod3Stacks = HashMap<OperatorType, Mod3Stack>()
+    private var caretCounter = 0
+    private var carets = ArrayList<Caret>()
+    private var executionPointer = Caret(0,0)
+    private var executionDirection: OperatorType = OperatorType.MOVE_RIGHT
+    private val readHead = ReadHead()
     var copyStack = CopyStack(this)
+    var mod3Stacks = HashMap<OperatorType, Mod3Stack>()
     var loopStack = LoopStack(this)
 
     init {
@@ -35,13 +35,13 @@ class ExecutionTrack {
     fun execute() {
         val (size, instruction) = CommandBuilder.readInstructionFromMemory(grid, readHead, executionPointer ,executionDirection)
         executionPointer.moveCaret(executionDirection, readHead, size)
-        Logger.l("Executing Instruction: ${instruction::class.qualifiedName}")
+//        Logger.l("Executing Instruction: ${instruction::class.qualifiedName}")
         instruction.execute(this)
 
     }
 
-    fun getInt(): Int = grid.getInt(readHead, carets[caretCounter])
-    fun setValue(value: Int) = grid.setInt(readHead, carets[caretCounter], value)
+    fun getInt(caret: Caret = carets[caretCounter]): Int = grid.getInt(readHead, caret)
+    fun setValue(value: Int, caret: Caret = carets[caretCounter]) = grid.setInt(readHead, caret, value)
 
     fun moveCaret(direction: OperatorType) = moveCaret(direction, getInt())
 
@@ -53,7 +53,7 @@ class ExecutionTrack {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    fun getExecutionCaret(): Caret = executionPointer
+    fun getExecutionCaretPosition(): Caret = Caret(executionPointer)
 
     fun setExecutionCaret(caret: Caret) {
         executionPointer.x = caret.x
@@ -77,14 +77,4 @@ class ExecutionTrack {
         isTerminated = true
     }
 
-
 }
-
-
-//enum class StackType {
-//    Plus, Minus, Multiplication, Divide, BitAnd, BitOr, BitXor, BitFlip
-//}
-//
-//enum class MoveType {
-//    North, East, South, West
-//}

@@ -67,11 +67,11 @@ class ExecutionTrack {
     }
 
     fun print() {
-        println("printing : ${getInt()}")
+        print("printing : ${getInt()}")
     }
 
     fun printCharacter() {
-        println("printing : ${grid.getChar(readHead, activeCaret)}")
+        print(grid.getChar(readHead, activeCaret))
     }
 
     fun loadInstructionTrackIntoMemory(chars: String) {

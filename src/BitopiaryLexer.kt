@@ -28,15 +28,15 @@ class BitopiaryLexer(filePath: String) {
 
             val didConsumeChar = builder.tryConsumeAccordingToSyntax(value)
             if (!didConsumeChar) {
-                println(builder.toString())
+                Logger.l(builder.toString())
                 commandList.add(builder)
                 builder = CommandBuilder(value)
             }
         }
-        println(builder.toString())
+        Logger.l(builder.toString())
         commandList.add(builder)
         val splitTracks :ArrayList<ArrayList<CommandBuilder>> = commandList.splitTracks()
-        splitTracks.filterNot { checkMatchingBrackets(it) }.forEach { throw Error("Syntax Warning; Brackets potentially mismatched") }
+        splitTracks.filterNot { checkMatchingBrackets(it) }.forEach { Logger.l("Syntax Warning; Brackets potentially mismatched") }
     }
 
     private fun loadSourceIntoProgramMemory(chars: String, grid: BitopiaryGrid) {

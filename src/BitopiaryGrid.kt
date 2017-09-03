@@ -1,7 +1,7 @@
 
 // https://discuss.kotlinlang.org/t/multi-dimensonal-arrays-are-a-pain-point-in-kotlin/561
 
-class BitopiaryGrid(val width: Int, val height: Int){
+class BitopiaryGrid(private val width: Int, private val height: Int){
     private val boolToBinary = { b: Boolean -> if (b) "1" else "0" }
 
     private val grid = Array(height, {BooleanArray(width)})

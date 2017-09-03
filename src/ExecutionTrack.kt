@@ -9,10 +9,13 @@ class ExecutionTrack {
     private var executionPointer = Caret(0,0)
     private var executionDirection: OperatorType = OperatorType.MOVE_RIGHT
     private val readHead = ReadHead()
+    private val userInputStream = UserInputStream()
     var copyStack = CopyStack(this)
     var mod3Stacks = HashMap<OperatorType, Mod3Stack>()
     var loopStack = LoopStack(this)
     var conditionalStack = ConditionalStack(this)
+    private val activeCaret: Caret
+        get() = carets[caretCounter]
 
     init {
         carets.add(Caret(0,0))
@@ -32,7 +35,7 @@ class ExecutionTrack {
     }
 
     fun execute() {
-        Logger.l(grid, carets[caretCounter], executionPointer)
+        Logger.l(grid, activeCaret, executionPointer)
         val (size, instruction) = CommandBuilder.readInstructionFromMemory(grid, readHead, executionPointer ,executionDirection)
         executionPointer.moveCaret(executionDirection, readHead, size)
 //        Logger.l("Executing Instruction: ${instruction::class.qualifiedName}")
@@ -44,16 +47,16 @@ class ExecutionTrack {
 
     }
 
-    fun getInt(caret: Caret = carets[caretCounter]): Int = grid.getInt(readHead, caret)
+    fun getInt(caret: Caret = activeCaret): Int = grid.getInt(readHead, caret)
 
-    fun setValue(value: Int, caret: Caret = carets[caretCounter]) = grid.setInt(readHead, caret, value)
+    fun setValue(value: Int, caret: Caret = activeCaret) = grid.setInt(readHead, caret, value)
 
-    fun moveCaretDefault(direction: OperatorType) = carets[caretCounter].moveCaret(direction, readHead)
+    fun moveCaretDefault(direction: OperatorType) = activeCaret.moveCaret(direction, readHead)
 
-    fun moveCaret(direction: OperatorType, distance: Int = getInt()) = carets[caretCounter].moveCaret(direction, distance)
+    fun moveCaret(direction: OperatorType, distance: Int = getInt()) = activeCaret.moveCaret(direction, distance)
 
     fun modifyData(varyHow: (Int, Int) -> Int, varyBy: Int = getInt()) {
-        grid.setInt(readHead, carets[caretCounter], varyHow(getInt(), varyBy))
+        grid.setInt(readHead, activeCaret, varyHow(getInt(), varyBy))
     }
 
     fun getExecutionCaretPosition(): Caret = Caret(executionPointer)
@@ -65,6 +68,10 @@ class ExecutionTrack {
 
     fun print() {
         println("printing : ${getInt()}")
+    }
+
+    fun printCharacter() {
+        println("printing : ${grid.getChar(readHead, activeCaret)}")
     }
 
     fun loadInstructionTrackIntoMemory(chars: String) {
@@ -98,7 +105,7 @@ class ExecutionTrack {
 
     fun spawnNewCaret(amount: Int = getInt()) {
         for (nr in 1..amount) {
-            carets.add(Caret(carets[caretCounter]))
+            carets.add(Caret(activeCaret))
         }
     }
 
@@ -108,6 +115,14 @@ class ExecutionTrack {
         } else {
             pos % carets.size
         }
+    }
+
+    fun storeUserInputStream(input: String) {
+        userInputStream.add(input)
+    }
+
+    fun loadInputToMemory() {
+        setValue(userInputStream.get())
     }
 
 }

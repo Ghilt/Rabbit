@@ -25,7 +25,7 @@ fun Char.toOperator(): OperatorType = when(this) {
     '&' -> OperatorType.AND
     '|' -> OperatorType.OR
     '¨' -> OperatorType.XOR
-    '"' -> OperatorType.STORE
+    ';' -> OperatorType.STORE
     '@' -> OperatorType.COPY
     '\'' -> OperatorType.INCREASE
     ',' -> OperatorType.DECREASE
@@ -44,6 +44,7 @@ fun Char.toOperator(): OperatorType = when(this) {
     ':' -> OperatorType.PRINT_OUTPUT
     '=' -> OperatorType.READ_INPUT
     '#' -> OperatorType.START_FUNCTION
+    '"' -> OperatorType.NO_OPERATION
     '.' -> OperatorType.MODIFIER
     '0','1','2','3','4','5','6','7','8','9',
     'A','B','C','D','E','F','G','H','I','J',
@@ -112,13 +113,13 @@ enum class OperatorType {
         override val usesStack = true
         override val instructionConstructor = ::StackInstruction
     },
-    INCREASE{
+    INCREASE {
         override val input = StandardInputType.Source
         override val instructionConstructor = ::VaryInstruction},
-    DECREASE{
+    DECREASE {
         override val input = StandardInputType.Source
         override val instructionConstructor = ::VaryInstruction},
-    COPY{ override val instructionConstructor = ::CopyInstruction},
+    COPY { override val instructionConstructor = ::CopyInstruction},
     STORE {
         override val input = StandardInputType.Source
         override val instructionConstructor = ::StoreInstruction
@@ -190,6 +191,9 @@ enum class OperatorType {
     },
     CHARACTER{
         override val instructionConstructor = ::CharacterInstruction
+    },
+    NO_OPERATION{
+        override val instructionConstructor = ::CharacterInstruction // TODO
     },
     MODIFIER{
         override val instructionConstructor = ::BracketInstruction // TODO

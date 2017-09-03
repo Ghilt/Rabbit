@@ -152,16 +152,18 @@ enum class OperatorType {
     },
     BEGIN_IF {
         override val isBracket = true
+        override val isRestrictable = false
         override fun matches(type: OperatorType) = type == END_IF
-        override val instructionConstructor = ::BracketInstruction // maybe its own instruction
+        override val instructionConstructor = ::ConditionalInstruction
     },
     END_IF {
         override val isBracket = true
+        override val isRestrictable = false
         override fun matches(type: OperatorType) = type == BEGIN_IF
-        override val instructionConstructor = ::BracketInstruction
+        override val instructionConstructor = ::ConditionalInstruction
     },
     CONFIGURE_READHEAD{
-        override val instructionConstructor = ::BracketInstruction
+        override val instructionConstructor = ::BracketInstruction // TODO
         override val input = StandardInputType.Source
     },
     EXECUTE{
@@ -194,12 +196,13 @@ enum class OperatorType {
     open val input: StandardInputType = StandardInputType.Caret
     open val usesStack: Boolean = false
     open val isBracket: Boolean = false
+    open val isRestrictable: Boolean = true
+
     abstract val instructionConstructor: (op: Char, modify: Boolean, input: ArrayList<Char>, type: OperatorType) -> Instruction
 
     fun createInstruction(op: Char, modify: Boolean, input: ArrayList<Char>, type: OperatorType) : Instruction {
         return instructionConstructor(op, modify, input, type)
     }
-
     open fun matches(type: OperatorType): Boolean = false
 
 }

@@ -6,7 +6,7 @@ import Extensions.toInt
 class BracketInstruction(operator: Char, modifyInputChannel: Boolean, input: ArrayList<Char>, type: OperatorType) : Instruction(operator, modifyInputChannel, input, type) {
 
     override fun execute(environment: ExecutionTrack) {
-        environment.executeLoopInstruction(this)
+        environment.loopStack.executeLoopInstruction(this)
     }
 
     fun conditionMet(counter: Int, valueOfStart: Int, valueOfEnd: Int): Boolean{
@@ -15,7 +15,9 @@ class BracketInstruction(operator: Char, modifyInputChannel: Boolean, input: Arr
             OperatorType.END_Q_LOOP -> counter == valueOfEnd
             OperatorType.BEGIN_LOOP -> valueOfStart == valueOfEnd
             OperatorType.END_LOOP -> valueOfStart != valueOfEnd
-            else -> TODO("not implemented, If statment prolly")
+            OperatorType.BEGIN_IF -> valueOfStart == valueOfEnd
+            OperatorType.END_IF -> valueOfStart != valueOfEnd
+            else -> throw Error("An error has occurred in: BracketInstruction $type")
         }
     }
 

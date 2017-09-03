@@ -1,9 +1,8 @@
-import Instructions.BracketInstruction
-import Instructions.Instruction
 
 class ExecutionTrack {
 
     var isTerminated = false
+    private var restrictInstructions = false
     lateinit var grid :BitopiaryGrid
     private var caretCounter = 0
     private var carets = ArrayList<Caret>()
@@ -13,6 +12,7 @@ class ExecutionTrack {
     var copyStack = CopyStack(this)
     var mod3Stacks = HashMap<OperatorType, Mod3Stack>()
     var loopStack = LoopStack(this)
+    var conditionalStack = ConditionalStack(this)
 
     init {
         carets.add(Caret(0,0))
@@ -27,7 +27,6 @@ class ExecutionTrack {
         //mod3Stacks.put(StackType.BitFlip, Mod3Stack(this,{ x, y -> x flipIt y})) TODO
     }
 
-
     fun bind(grid: BitopiaryGrid) {
         this.grid = grid
     }
@@ -36,7 +35,11 @@ class ExecutionTrack {
         val (size, instruction) = CommandBuilder.readInstructionFromMemory(grid, readHead, executionPointer ,executionDirection)
         executionPointer.moveCaret(executionDirection, readHead, size)
 //        Logger.l("Executing Instruction: ${instruction::class.qualifiedName}")
-        instruction.execute(this)
+        if (restrictInstructions){
+            instruction.restrictedExecute(this)
+        } else {
+            instruction.execute(this)
+        }
 
     }
 
@@ -64,8 +67,6 @@ class ExecutionTrack {
         println("printing : ${getInt()}")
     }
 
-    fun executeLoopInstruction(bracketInstruction: BracketInstruction) = loopStack.executeLoopInstruction(bracketInstruction)
-
     fun loadInstructionTrackIntoMemory(chars: String) {
         for(index in 0 until chars.length){
             grid.setInt(readHead, Caret(index ,0, readHead), chars[index].toInt())
@@ -76,5 +77,15 @@ class ExecutionTrack {
     fun terminate(){
         isTerminated = true
     }
+
+    fun enableInstructions() {
+        restrictInstructions = false
+    }
+
+    fun restrictInstructions() {
+        restrictInstructions = true
+    }
+
+    fun isRestricted(): Boolean = restrictInstructions
 
 }

@@ -23,7 +23,6 @@ class LoopStack(private val environment :ExecutionTrack) {
     }
 
     private fun startLoopIteration(instruction: BracketInstruction) {
-//        val relevantValue = if (instruction.modifyInputChannel) environment.getInt() else instruction.input.toInt()
         val relevantValue = when (instruction.modifyInputChannel) {
             true -> instruction.input.toInt()
             false -> environment.getInt()
@@ -41,6 +40,5 @@ class LoopStack(private val environment :ExecutionTrack) {
             stack.peek().increaseLoopCounter()
             environment.setExecutionCaret(caret)
         }
-
     }
 }

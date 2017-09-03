@@ -20,7 +20,8 @@ class Mod3Stack(private val environment :ExecutionTrack, private val operation :
     fun executeInstruction(input: Int) {
         when (state) {
             0 -> term += input
-            1, 2 -> {
+            1 -> term = operation(term, input)
+            2 -> {
                 term = operation(term, input)
                 state = 0
             }

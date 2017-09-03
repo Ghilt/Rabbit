@@ -32,6 +32,7 @@ class ExecutionTrack {
     }
 
     fun execute() {
+        Logger.l(grid, carets[caretCounter], executionPointer)
         val (size, instruction) = CommandBuilder.readInstructionFromMemory(grid, readHead, executionPointer ,executionDirection)
         executionPointer.moveCaret(executionDirection, readHead, size)
 //        Logger.l("Executing Instruction: ${instruction::class.qualifiedName}")
@@ -44,16 +45,15 @@ class ExecutionTrack {
     }
 
     fun getInt(caret: Caret = carets[caretCounter]): Int = grid.getInt(readHead, caret)
-    fun setValue(value: Int, caret: Caret = carets[caretCounter]) = grid.setInt(readHead, caret, value)
 
-    fun moveCaret(direction: OperatorType) = moveCaret(direction, getInt())
+    fun setValue(value: Int, caret: Caret = carets[caretCounter]) = grid.setInt(readHead, caret, value)
 
     fun moveCaretDefault(direction: OperatorType) = carets[caretCounter].moveCaret(direction, readHead)
 
-    fun moveCaret(direction: OperatorType, distance: Int) = carets[caretCounter].moveCaret(direction, distance)
+    fun moveCaret(direction: OperatorType, distance: Int = getInt()) = carets[caretCounter].moveCaret(direction, distance)
 
-    fun modifyData(varyBy: (Int) -> Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun modifyData(varyHow: (Int, Int) -> Int, varyBy: Int = getInt()) {
+        grid.setInt(readHead, carets[caretCounter], varyHow(getInt(), varyBy))
     }
 
     fun getExecutionCaretPosition(): Caret = Caret(executionPointer)
@@ -87,5 +87,27 @@ class ExecutionTrack {
     }
 
     fun isRestricted(): Boolean = restrictInstructions
+
+    fun configureReadHead(dimensionDouble: Boolean = false, value: Int = getInt()) {
+        if(dimensionDouble){
+            readHead.configurationChange()
+        } else {
+            readHead.configurationChange(value)
+        }
+    }
+
+    fun spawnNewCaret(amount: Int = getInt()) {
+        for (nr in 1..amount) {
+            carets.add(Caret(carets[caretCounter]))
+        }
+    }
+
+    fun swapCaret(pos: Int = getInt(), cycle: Boolean = false) {
+        caretCounter = if (cycle){
+            (caretCounter + 1) % carets.size
+        } else {
+            pos % carets.size
+        }
+    }
 
 }

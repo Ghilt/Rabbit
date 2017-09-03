@@ -6,7 +6,7 @@ class CommandBuilder(private val operator : Char){
         data class InstructionInfo(val size: Int, val instruction: Instruction)
         fun readInstructionFromMemory(grid: BitopiaryGrid, readHead: ReadHead, caret: Caret, executionDirection: OperatorType): InstructionInfo {
             val position = Caret(caret)
-            var size = 0;
+            var size = 0
             val builder = CommandBuilder(grid.getChar(readHead, position))
             while (true){
                 size++
@@ -60,7 +60,7 @@ class CommandBuilder(private val operator : Char){
     }
 
     private fun consumeCommandModifier(): Boolean {
-        if (hasCommandModifier || inputToCommand.isNotEmpty()) {
+        if (hasCommandModifier || (inputToCommand.isNotEmpty() && commandType != OperatorType.CHARACTER )) {
             throw Error("Syntax Error; Double Command Modifier")
         } else {
             hasCommandModifier = true

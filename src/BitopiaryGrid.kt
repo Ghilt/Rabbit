@@ -42,6 +42,7 @@ class BitopiaryGrid(val width: Int, val height: Int){
     }
 
     fun setInt(readHead: ReadHead, caret: Caret, value: Int) {
+        Logger.l("Set value to grid: $value")
         val leastSignificantFirst = Integer.toBinaryString(value).reversed().padEnd(readHead.size, '0')
 
         var bitIndex = 0

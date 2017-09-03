@@ -40,6 +40,7 @@ fun Char.toOperator(): OperatorType = when(this) {
     '!' -> OperatorType.EXECUTE
     '¤', 0.toChar() -> OperatorType.EXIT_EXECUTION
     '?' -> OperatorType.QUERY_ENVIRONMENT
+    '£' -> OperatorType.CONFIGURE_READHEAD
     ':' -> OperatorType.PRINT_OUTPUT
     '=' -> OperatorType.READ_INPUT
     '#' -> OperatorType.START_FUNCTION
@@ -162,8 +163,8 @@ enum class OperatorType {
         override fun matches(type: OperatorType) = type == BEGIN_IF
         override val instructionConstructor = ::ConditionalInstruction
     },
-    CONFIGURE_READHEAD{
-        override val instructionConstructor = ::BracketInstruction // TODO
+    CONFIGURE_READHEAD {
+        override val instructionConstructor = ::ConfigureReadHeadInstruction
         override val input = StandardInputType.Source
     },
     EXECUTE{
@@ -173,10 +174,11 @@ enum class OperatorType {
         override val instructionConstructor = ::TerminateExecutionInstruction
     },
     NEW_CARET{
-        override val instructionConstructor = ::BracketInstruction // TODO
+        override val input = StandardInputType.Source
+        override val instructionConstructor = ::NewCaretInstruction
     },
     CHANGE_CARET{
-        override val instructionConstructor = ::BracketInstruction // TODO
+        override val instructionConstructor = ::SwapCaretInstruction
     },
     QUERY_ENVIRONMENT{
         override val input = StandardInputType.Source

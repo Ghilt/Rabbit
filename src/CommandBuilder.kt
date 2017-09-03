@@ -29,14 +29,14 @@ class CommandBuilder(private val operator : Char){
     var hasCommandModifier = false
 
     init {
-        if (operator == BitopiarySyntax.commandModifier) {
+        if (commandType == BitopiarySyntax.commandModifier) {
             throw Error("Syntax Error; Command Modifier as command")
         }
     }
 
 
     fun tryConsumeAccordingToSyntax(ch: Char) : Boolean{
-        return when (ch) {
+        return when (ch.toOperator()) {
             BitopiarySyntax.commandModifier -> consumeCommandModifier()
             else -> return if (canConsumeInput(commandType.input, ch)){
                 inputToCommand.add(ch)

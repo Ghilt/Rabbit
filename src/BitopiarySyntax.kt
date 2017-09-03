@@ -1,10 +1,9 @@
 import Instructions.*
-import Extensions.*
 
 object BitopiarySyntax {
 
-    val parallelExecution = '#'
-    val commandModifier = '.'
+    val parallelExecution = '#' //TODO rethink this
+    val commandModifier = OperatorType.MODIFIER
 
     operator fun contains(ch :Char) : Boolean{
         return OperatorType.values().contains(ch.toOperator()) //Don't optimize when you don't need to right/know what you are doing
@@ -169,7 +168,7 @@ enum class OperatorType {
         override val input = StandardInputType.Source
     },
     EXECUTE{
-        override val instructionConstructor = ::BracketInstruction // TODO
+        override val instructionConstructor = ::ExecuteInstruction
     },
     EXIT_EXECUTION{
         override val instructionConstructor = ::TerminateExecutionInstruction
@@ -183,20 +182,20 @@ enum class OperatorType {
     },
     QUERY_ENVIRONMENT{
         override val input = StandardInputType.Source
-        override val instructionConstructor = ::BracketInstruction // TODO
+        override val instructionConstructor = ::QueryEnvironmentInstruction
 
     },
     START_FUNCTION{
-        override val instructionConstructor = ::BracketInstruction // TODO
+        override val instructionConstructor = ::StartFunctionInstruction
     },
     CHARACTER{
         override val instructionConstructor = ::CharacterInstruction
     },
     NO_OPERATION{
-        override val instructionConstructor = ::CharacterInstruction // TODO
+        override val instructionConstructor = ::NoOpInstruction
     },
     MODIFIER{
-        override val instructionConstructor = ::BracketInstruction // TODO
+        override val instructionConstructor = ::NoOpInstruction
     };
 
     open val input: StandardInputType = StandardInputType.Caret

@@ -92,6 +92,12 @@ class CommandBuilder(private val operator : Char){
 
     fun build(): Instruction = commandType.createInstruction(operator, hasCommandModifier, inputToCommand, commandType)
 
+    fun setInputAsSource(input: ArrayList<Char> ) {
+        hasCommandModifier = commandType.input == StandardInputType.Caret
+        inputToCommand.addAll(input)
+
+    }
+
 }
 
 

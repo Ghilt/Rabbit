@@ -10,6 +10,7 @@ class ExecutionTrack {
     private var executionDirection: OperatorType = OperatorType.MOVE_RIGHT
     private val readHead = ReadHead()
     private val userInputStream = UserInputStream()
+    private val executeFromMemoryManager = ExecuteFromMemoryManager()
     var copyStack = CopyStack(this)
     var mod3Stacks = HashMap<OperatorType, Mod3Stack>()
     var loopStack = LoopStack(this)
@@ -123,6 +124,10 @@ class ExecutionTrack {
 
     fun loadInputToMemory() {
         setValue(userInputStream.get())
+    }
+
+    fun executeFromMemory(fromInstruction: ArrayList<Char> = ArrayList<Char>().apply{ add(grid.getChar(readHead, activeCaret))}) {
+        executeFromMemoryManager.executeFromMemory(this, fromInstruction)
     }
 
 }

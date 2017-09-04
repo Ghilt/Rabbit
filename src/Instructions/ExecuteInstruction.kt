@@ -7,10 +7,9 @@ class ExecuteInstruction(operator: Char, modifyInputChannel: Boolean, input: Arr
 
     override fun execute(environment: ExecutionTrack) {
         if (modifyInputChannel) {
-            TODO("Not implemented")
+            environment.executeFromMemory(input)
         } else {
-            TODO("Not implemented")
-
+            environment.executeFromMemory()
         }
     }
 }

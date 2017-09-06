@@ -19,6 +19,22 @@ enum class StandardInputType {
     Source, Caret, IO
 }
 
+class QueryParameter {
+    companion object {
+        var version = 'v'
+        var readHeadWidth = 'w'
+        var readHeadHeight = 'h'
+        var activeCaret = 'c'
+        var caretX = 'x'
+        var caretY = 'y'
+
+        fun stack(parameter :Char) : Char?{
+            return if (OperatorType.values().filter { it.usesStack }.map { it.toCharacter[0] }.contains(parameter)) parameter else null
+        }
+
+    }
+}
+
 enum class OperatorType {
     MOVE_RIGHT {
         override val toCharacter = charArrayOf('>')
@@ -176,7 +192,6 @@ enum class OperatorType {
     },
     QUERY_ENVIRONMENT {
         override val toCharacter = charArrayOf('?')
-        override val input = StandardInputType.Source
         override val instructionConstructor = ::QueryEnvironmentInstruction
 
     },

@@ -1,5 +1,9 @@
 class BitopiaryProgram {
 
+    companion object {
+        var version = 1
+    }
+
     val tracks = ArrayList<ExecutionTrack>()
     val grid = BitopiaryGrid(1000,1000)
 

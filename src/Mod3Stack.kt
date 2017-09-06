@@ -28,4 +28,7 @@ class Mod3Stack(private val environment :ExecutionTrack, private val operation :
         }
         state++
     }
+
+    fun getTerm(): Int = term
+
 }

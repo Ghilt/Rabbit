@@ -7,10 +7,9 @@ class QueryEnvironmentInstruction(operator: Char, modifyInputChannel: Boolean, i
 
     override fun execute(environment: ExecutionTrack) {
         if (modifyInputChannel) {
-            TODO("Not implemented")
+            environment.queryForInformation(input.first())
         } else {
-            TODO("Not implemented")
-
+            environment.queryForInformation()
         }
     }
 }

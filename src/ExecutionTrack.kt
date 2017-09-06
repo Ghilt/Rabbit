@@ -130,4 +130,17 @@ class ExecutionTrack {
         executeFromMemoryManager.executeFromMemory(this, fromInstruction)
     }
 
+    fun queryForInformation(parameter: Char = grid.getChar(readHead, activeCaret)) {
+        when (parameter){
+            QueryParameter.version -> setValue(BitopiaryProgram.version.toInt())
+            QueryParameter.readHeadWidth -> setValue(readHead.width)
+            QueryParameter.readHeadHeight -> setValue(readHead.height)
+            QueryParameter.activeCaret -> setValue(caretCounter)
+            QueryParameter.caretX -> setValue(activeCaret.x)
+            QueryParameter.caretY -> setValue(activeCaret.y)
+            QueryParameter.stack(parameter) -> setValue(mod3Stacks[parameter.toOperator()] !!.getTerm())
+
+        }
+    }
+
 }

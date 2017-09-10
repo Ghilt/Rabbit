@@ -1,6 +1,7 @@
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
+import Extensions.*
 import kotlin.collections.ArrayList
 
 
@@ -16,8 +17,11 @@ class BitopiaryLexer(filePath: String) {
         }
         val chars = source.filter{x -> x in BitopiarySyntax }
         if (chars.isNotEmpty()) {
-            logOriginalSource(chars)
-            loadSourceIntoProgramMemory(chars, program.grid)
+            val tracks = chars.split(BitopiarySyntax.parallelExecution)
+            for ((index, track) in tracks.withIndex()) {
+                logOriginalSource(track)
+                loadSourceIntoProgramMemory(track, index)
+            }
         }
     }
 
@@ -35,15 +39,13 @@ class BitopiaryLexer(filePath: String) {
         }
         Logger.l(builder.toString())
         commandList.add(builder)
-        val splitTracks :ArrayList<ArrayList<CommandBuilder>> = commandList.splitTracks()
-        splitTracks.filterNot { checkMatchingBrackets(it) }.forEach { Logger.l("Syntax Warning; Brackets potentially mismatched") }
+        if (!checkMatchingBrackets(commandList)) Logger.l("Syntax Warning; Brackets potentially mismatched")
     }
 
-    private fun loadSourceIntoProgramMemory(chars: String, grid: BitopiaryGrid) {
-        val instructions = ExecutionTrack()
-        instructions.bind(grid)
-        instructions.loadInstructionTrackIntoMemory(chars)
-        program.addExecutionTrack(instructions)
+    private fun loadSourceIntoProgramMemory(chars: String, row: Int) {
+        val defaultReadHead = ReadHead()
+        program.loadInstructionTrackIntoMemory(chars, row)
+        program.setExecutionTrack(Caret(0, row, readHead = defaultReadHead), Caret(0, row, readHead = defaultReadHead), OperatorType.MOVE_RIGHT)
     }
 
     private fun checkMatchingBrackets(track: ArrayList<CommandBuilder>) : Boolean {
@@ -56,32 +58,6 @@ class BitopiaryLexer(filePath: String) {
                 stack.push(c)
             }
         }
-
         return stack.isEmpty()
     }
 }
-
-private fun ArrayList<CommandBuilder>.splitTracks(): ArrayList<ArrayList<CommandBuilder>> {
-    var splitCounter = 0
-    val tracks = ArrayList<ArrayList<CommandBuilder>>()
-    tracks.add(ArrayList())
-    for (cb in this) {
-        if(cb.isStartParallelExecution()){
-            if (splitCounter == 0 && cb.hasCommandModifier) {
-                tracks.add(ArrayList())
-            } else {
-                splitCounter = (splitCounter +1) % 3
-                tracks.last().add(cb)
-            }
-        } else {
-            tracks.last().add(cb)
-        }
-    }
-    return tracks
-}
-
-//I wonder what the practise is where to keep extension things
-val String.tail: String // Extension property
-    get() = drop(1)
-
-fun ArrayList<Char>.lastIsDigit() = lastOrNull()?.isDigit() == true // Extension function

@@ -4,19 +4,35 @@ class BitopiaryProgram {
         var version = 1
     }
 
-    val tracks = ArrayList<ExecutionTrack>()
+    private val tracks = ArrayList<ExecutionTrack>()
+    private val tracksToBeAdded = ArrayList<ExecutionTrack>()
     val grid = BitopiaryGrid(1000,1000)
 
 
-    fun addExecutionTrack(instructions: ExecutionTrack) {
-        tracks.add(instructions)
-        instructions.bind(grid)
+    fun setExecutionTrack(startPoint: Caret, startMemoryPos: Caret, direction: OperatorType) {
+        tracks.add(ExecutionTrack(this, grid, direction, startPoint, startMemoryPos))
+    }
+
+    fun addExecutionTrack(startPoint: Caret, startMemoryPos: Caret, direction: OperatorType) {
+        Logger.l("Add new executionTrack: execStart: $startPoint memStart: $startMemoryPos")
+        tracksToBeAdded.add(ExecutionTrack(this, grid, direction, startPoint, startMemoryPos))
     }
 
     fun run(){
         while (tracks.isNotEmpty()) {
             tracks.forEach { it.execute()}
             tracks.removeAll(tracks.filter { it.isTerminated })
+            tracksToBeAdded.forEach{tracks.add(it)}
+            tracksToBeAdded.clear()
         }
     }
+
+    fun loadInstructionTrackIntoMemory(chars: String, row: Int) {
+        val readHead = ReadHead()
+        for(index in 0 until chars.length){
+            grid.setInt(readHead, Caret(index, row, readHead), chars[index].toInt())
+        }
+        Logger.l(grid)
+    }
+
 }

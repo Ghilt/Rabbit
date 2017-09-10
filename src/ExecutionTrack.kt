@@ -1,16 +1,19 @@
+import Extensions.*
 
-class ExecutionTrack {
+class ExecutionTrack(private val program: BitopiaryProgram,
+                     private val grid: BitopiaryGrid,
+                     private val executionDirection: OperatorType,
+                     private val executionPointer: Caret,
+                     startMemoryPos: Caret) {
 
     var isTerminated = false
     private var restrictInstructions = false
-    lateinit var grid :BitopiaryGrid
     private var caretCounter = 0
     private var carets = ArrayList<Caret>()
-    private var executionPointer = Caret(0,0)
-    private var executionDirection: OperatorType = OperatorType.MOVE_RIGHT
     private val readHead = ReadHead()
     private val userInputStream = UserInputStream()
-    private val executeFromMemoryManager = ExecuteFromMemoryManager()
+    private val executeFromMemoryManager = ExecuteFromMemoryManager() // TODO make generic base
+    private val createExecutionTrackManager = NewExecutionTrackManager(program) // TODO make generic base
     var copyStack = CopyStack(this)
     var mod3Stacks = HashMap<OperatorType, Mod3Stack>()
     var loopStack = LoopStack(this)
@@ -19,7 +22,7 @@ class ExecutionTrack {
         get() = carets[caretCounter]
 
     init {
-        carets.add(Caret(0,0))
+        carets.add(startMemoryPos)
         mod3Stacks.put(OperatorType.ADD, Mod3Stack(this, { x, y -> x + y}))
         mod3Stacks.put(OperatorType.SUBTRACT, Mod3Stack(this,{ x, y -> x - y}))
         mod3Stacks.put(OperatorType.MULTIPLY, Mod3Stack(this,{ x, y -> x * y}))
@@ -31,21 +34,16 @@ class ExecutionTrack {
         //mod3Stacks.put(StackType.BitFlip, Mod3Stack(this,{ x, y -> x flipIt y})) TODO
     }
 
-    fun bind(grid: BitopiaryGrid) {
-        this.grid = grid
-    }
-
     fun execute() {
         Logger.l(grid, activeCaret, executionPointer)
-        val (size, instruction) = CommandBuilder.readInstructionFromMemory(grid, readHead, executionPointer ,executionDirection)
+        val (size, instruction) = CommandBuilder.readInstructionFromMemory(grid, readHead, executionPointer, executionDirection)
         executionPointer.moveCaret(executionDirection, readHead, size)
-//        Logger.l("Executing Instruction: ${instruction::class.qualifiedName}")
         if (restrictInstructions){
             instruction.restrictedExecute(this)
         } else {
+            Logger.l(this, "Executing: ${instruction.toLogString()} ExecCaret: $executionPointer + MemCaret: $activeCaret"  )
             instruction.execute(this)
         }
-
     }
 
     fun getInt(caret: Caret = activeCaret): Int = grid.getInt(readHead, caret)
@@ -73,13 +71,6 @@ class ExecutionTrack {
 
     fun printCharacter() {
         print(grid.getChar(readHead, activeCaret))
-    }
-
-    fun loadInstructionTrackIntoMemory(chars: String) {
-        for(index in 0 until chars.length){
-            grid.setInt(readHead, Caret(index ,0, readHead), chars[index].toInt())
-        }
-        Logger.l(grid)
     }
 
     fun terminate(){
@@ -143,4 +134,10 @@ class ExecutionTrack {
         }
     }
 
+    fun startExecutionTrack(parameter: Int = getInt()) {
+        createExecutionTrackManager.feedValue(parameter, carets.getElementModulo(parameter, carets.size))
+    }
+
 }
+
+

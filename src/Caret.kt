@@ -16,4 +16,6 @@ class Caret(var x :Int = 0, var y :Int = 0) {
         else -> throw Error("Error; OperatorType Exception $direction")
     }
 
+    override fun toString(): String = "($x, $y)"
+
 }

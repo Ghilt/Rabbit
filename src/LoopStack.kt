@@ -36,6 +36,7 @@ class LoopStack(private val environment :ExecutionTrack) {
         val valueOfEnd = endInstruction.getValue(environment.getInt())
         if (startInstruction.conditionMet(counter, valueOfStart, valueOfEnd)){
             stack.pop()
+            Logger.l(environment, "Exiting Loop at $counter iterations")
         } else {
             stack.peek().increaseLoopCounter()
             environment.setExecutionCaret(caret)

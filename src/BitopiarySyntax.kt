@@ -2,17 +2,21 @@ import Instructions.*
 
 object BitopiarySyntax {
 
-    val parallelExecution = '#' //TODO rethink this
+    val parallelExecution = 'ƒ'
     val commandModifier = OperatorType.MODIFIER
 
     operator fun contains(ch :Char) : Boolean{
-        return OperatorType.values().contains(ch.toOperator()) //Don't optimize when you don't need to right/know what you are doing
+        return OperatorType.values().contains(ch.toOperatorNullable()) || ch == parallelExecution
     }
 
 }
 
+private fun Char.toOperatorNullable(): OperatorType? {
+    return OperatorType.values().firstOrNull { it.toCharacter.contains(this) }
+}
+
 fun Char.toOperator(): OperatorType {
-    return OperatorType.values().firstOrNull { it.toCharacter.contains(this) } ?: throw Exception("Syntax Error: character is not allowed ${this}, ${this.toInt()}")
+    return this.toOperatorNullable() ?: throw Exception("Syntax Error: character is not allowed ${this}, ${this.toInt()}")
 }
 
 enum class StandardInputType {

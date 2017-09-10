@@ -1,4 +1,5 @@
 import Instructions.Instruction
+import Extensions.*
 
 class CommandBuilder(private val operator : Char){
 
@@ -14,7 +15,7 @@ class CommandBuilder(private val operator : Char){
 
                 val didConsumeChar = builder.tryConsumeAccordingToSyntax(grid.getChar(readHead, position))
                 if (!didConsumeChar) {
-                    Logger.l("Read instruction: " + builder.toString())
+//                    Logger.l("Instruction: " + builder.toString())
                     break
                 }
             }
@@ -84,10 +85,6 @@ class CommandBuilder(private val operator : Char){
         '}' -> operator == '{'
         '{' -> operator == '}'
         else -> false
-    }
-
-    fun isStartParallelExecution(): Boolean {
-        return  operator == BitopiarySyntax.parallelExecution
     }
 
     fun build(): Instruction = commandType.createInstruction(operator, hasCommandModifier, inputToCommand, commandType)

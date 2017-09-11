@@ -34,8 +34,11 @@ class ExecutionTrack(private val program: BitopiaryProgram,
         mod3Stacks.put(OperatorType.AND, Mod3Stack(this, { x, y -> x and y }))
         mod3Stacks.put(OperatorType.OR, Mod3Stack(this, { x, y -> x or y }))
         mod3Stacks.put(OperatorType.XOR, Mod3Stack(this, { x, y -> x xor y }))
-        //mod3Stacks.put(StackType.BitFlip, ExecutionState.Mod3Stack(this,{ x, y -> x flipIt y})) TODO
+        mod3Stacks.put(OperatorType.FLIP, Mod3Stack(this,{ x, y -> x flip y}))
+        mod3Stacks.put(OperatorType.SHIFT_LEFT, Mod3Stack(this,{ x, y -> x shl y}))
+        mod3Stacks.put(OperatorType.SHIFT_RIGHT, Mod3Stack(this,{ x, y -> x shr y}))
     }
+
 
     fun execute() {
         Logger.l(grid, activeCaret, executionPointer)
@@ -132,6 +135,9 @@ class ExecutionTrack(private val program: BitopiaryProgram,
             QueryParameter.activeCaret -> setValue(caretCounter)
             QueryParameter.caretX -> setValue(activeCaret.x)
             QueryParameter.caretY -> setValue(activeCaret.y)
+            QueryParameter.maxVal -> setValue(Math.pow(2.0, (readHead.size).toDouble()).toInt() - 1 shr 1) // Do not understand why shifiting -1 does not work
+            QueryParameter.minVal -> setValue(Math.pow(2.0, (readHead.size).toDouble()).toInt())
+            QueryParameter.negativeSign -> setValue(1 shl readHead.size-1)
             QueryParameter.stack(parameter) -> setValue(mod3Stacks[parameter.toOperator()] !!.getTerm())
 
         }
@@ -142,5 +148,6 @@ class ExecutionTrack(private val program: BitopiaryProgram,
     }
 
 }
+
 
 

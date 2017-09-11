@@ -2,11 +2,11 @@ package Bitopiary
 
 import Bitopiary.ExecutionState.Caret
 import Bitopiary.ExecutionState.ReadHead
+import Extensions.boolToBinary
 
 // https://discuss.kotlinlang.org/t/multi-dimensonal-arrays-are-a-pain-point-in-kotlin/561
 
 class BitopiaryGrid(private val width: Int, private val height: Int){
-    private val boolToBinary = { b: Boolean -> if (b) "1" else "0" }
 
     private val grid = BitArrayGrid()
 

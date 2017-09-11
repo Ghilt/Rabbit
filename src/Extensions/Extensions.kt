@@ -1,5 +1,7 @@
 package Extensions
 
+import Bitopiary.ExecutionState.ReadHead
+
 fun ArrayList<Char>.toInt() : Int = when (this.size == 1 && !this[0].isDigit()) {
     true -> this[0].toInt()
     false -> {
@@ -19,10 +21,29 @@ fun ArrayList<Char>.lastIsDigit() = lastOrNull()?.isDigit() == true
 val String.tail: String // Extension property
     get() = drop(1)
 
-public fun ArrayList<Char>.toLogString(): String {
+fun ArrayList<Char>.toLogString(): String {
     return when {
         this.isEmpty() -> ""
         this.size == 1 -> "${this[0]}"
         else -> "${this.toInt()}"
     }
 }
+
+/** Found built in bitwise inversion infix inv()....  x inv y
+ * but keeping this as an example */
+infix fun Int.flip(y: Int): Int {
+    var strThis = Integer.toBinaryString(this)
+    var strY = Integer.toBinaryString(y)
+    if (this > y){
+        strY = strY.padStart(strThis.length,'0')
+    } else {
+        strThis = strThis.padStart(strY.length,'0')
+    }
+    val flipped = strThis.zip(strY) {
+        a,b -> if (a == b) '0' else '1'
+    }
+
+    return Integer.parseInt(flipped.fold(""){ a, c -> a + c}, 2)
+}
+
+val boolToBinary = { b: Boolean -> if (b) "1" else "0" }

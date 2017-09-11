@@ -31,6 +31,9 @@ class QueryParameter {
         var activeCaret = 'c'
         var caretX = 'x'
         var caretY = 'y'
+        var maxVal = '^'
+        var minVal = '_'
+        var negativeSign = 'n'
 
         fun stack(parameter :Char) : Char?{
             return if (OperatorType.values().filter { it.usesStack }.map { it.toCharacter[0] }.contains(parameter)) parameter else null
@@ -102,6 +105,16 @@ enum class OperatorType {
     },
     FLIP {
         override val toCharacter = charArrayOf('~')
+        override val usesStack = true
+        override val instructionConstructor = ::StackInstruction
+    },
+    SHIFT_LEFT {
+        override val toCharacter = charArrayOf('«')
+        override val usesStack = true
+        override val instructionConstructor = ::StackInstruction
+    },
+    SHIFT_RIGHT {
+        override val toCharacter = charArrayOf('»')
         override val usesStack = true
         override val instructionConstructor = ::StackInstruction
     },

@@ -19,9 +19,8 @@ class BitopiaryLexer(filePath: String) {
         stream.buffered().reader().use { reader ->
             source = reader.readText()
         }
-        val chars = source.filter{x -> x in BitopiarySyntax }
-        if (chars.isNotEmpty()) {
-            val tracks = chars.split(BitopiarySyntax.parallelExecution)
+        if (source.isNotEmpty()) {
+            val tracks = source.split(BitopiarySyntax.parallelExecution)
             for ((index, track) in tracks.withIndex()) {
                 logOriginalSource(track)
                 loadSourceIntoProgramMemory(track, index)

@@ -2,6 +2,7 @@ package Bitopiary.ExecutionState
 
 import Extensions.toInt
 import Bitopiary.Instructions.ConditionalInstruction
+import Bitopiary.Logger
 import java.util.*
 
 class ConditionalStack(private val environment : ExecutionTrack) {
@@ -12,6 +13,7 @@ class ConditionalStack(private val environment : ExecutionTrack) {
         var conditionTrue = false
         var finished = false
         var awaitingCondition = true
+        var clauseCounter = 0
 
         fun matches(other: ConditionalInstruction): Boolean = false != toBePaired?.type?.matches(other.type) //Considered match if none to match with
 
@@ -44,7 +46,7 @@ class ConditionalStack(private val environment : ExecutionTrack) {
 
         val startPair = null == toBePaired
         val waitingForFinish = marker.finished
-        val last = toBePaired?.type == startInstruction.type && !awaitingCondition
+        val last = toBePaired?.type == startInstruction.type && marker.clauseCounter != 0
 
         when {
             last -> finishUpChain()
@@ -57,19 +59,21 @@ class ConditionalStack(private val environment : ExecutionTrack) {
             marker.toBePaired = nextInstruction
         } else {
             marker.toBePaired = null
-
+            marker.clauseCounter++
         }
     }
 
     private fun finishUpChain() {
         environment.enableInstructions()
-        stack.pop()
+        val over = stack.pop()
+        Logger.l(environment, "ConditionalStack conditional ended: ${over.clauseCounter}")
     }
 
     private fun handleEndPair(awaitingCondition: Boolean, conditionTrue: Boolean, marker: Marker, startPaired: ConditionalInstruction, endPaired: ConditionalInstruction) {
         if (awaitingCondition){
             val valueOfEnd = endPaired.getValue(environment.getInt())
             marker.conditionTrue = true == startPaired.evaluateConditional(marker.startValue, valueOfEnd)
+            Logger.l(environment, "ConditionalStack evaluated: ${marker.conditionTrue}")
         } else if (conditionTrue) {
             marker.finished = true
         } else {

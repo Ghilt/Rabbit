@@ -22,7 +22,7 @@ fun Char.toOperator(): OperatorType {
 }
 
 enum class StandardInputType {
-    Source, Caret, IO
+    Source, SourceNoDefault, Caret, IO
 }
 
 class QueryParameter {
@@ -123,7 +123,7 @@ enum class OperatorType {
     },
     STORE {
         override val toCharacter = charArrayOf(';')
-        override val input = StandardInputType.Source
+        override val input = StandardInputType.SourceNoDefault
         override val instructionConstructor = ::StoreInstruction
     },
     READ_INPUT {

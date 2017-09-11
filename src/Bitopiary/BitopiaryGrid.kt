@@ -8,30 +8,28 @@ import Bitopiary.ExecutionState.ReadHead
 class BitopiaryGrid(private val width: Int, private val height: Int){
     private val boolToBinary = { b: Boolean -> if (b) "1" else "0" }
 
-    private val grid = Array(height, {BooleanArray(width)})
-
-    private fun heightFilter(readHead: ReadHead, caret: Caret) = { index: Int, _: BooleanArray ->  index in caret.y until caret.y + readHead.height}
-    private fun widthFilter(readHead: ReadHead, caret: Caret) = { index: Int, _: Boolean ->  index in caret.x until caret.x + readHead.width}
+    private val grid = BitArrayGrid()
 
     fun getInt(readHead: ReadHead, caret: Caret): Int {
-        val filterHeight = heightFilter(readHead, caret)
-        val filterWidth = widthFilter(readHead, caret)
 
-        val bitList = grid.filterIndexed(filterHeight).flatMap { array -> array.filterIndexed(filterWidth).toList()}
+        val bitList = BooleanArray(readHead.size)
+        grid.foldRange(caret, readHead, bitList) {
+            accumulator, index, nextValue -> accumulator.apply { set(index, nextValue)}
+        }
         return transformToInt(bitList)
     }
 
     fun getUnsignedInt(readHead: ReadHead, caret: Caret): Int {
-        val filterHeight = heightFilter(readHead, caret)
-        val filterWidth = widthFilter(readHead, caret)
-
-        val bitList = grid.filterIndexed(filterHeight).flatMap { array -> array.filterIndexed(filterWidth).toList()}
+        val bitList = BooleanArray(readHead.size)
+        grid.foldRange(caret, readHead, bitList) {
+            accumulator, index, nextValue -> accumulator.apply { set(index, nextValue)}
+        }
         return Integer.parseInt(bitList.joinToString("", transform = boolToBinary), 2)
     }
 
     fun getChar(readHead: ReadHead, caret: Caret) = getUnsignedInt(readHead, caret).toChar()
 
-    private fun transformToInt(bits: Iterable<Boolean>): Int {
+    private fun transformToInt(bits: BooleanArray): Int {
 
         return if (bits.first()) { // Handle two's complement, kind of annoying to have to do it oneself
             val inverted = bits.map { b -> !b }.toMutableList()
@@ -47,24 +45,14 @@ class BitopiaryGrid(private val width: Int, private val height: Int){
 
     fun setInt(readHead: ReadHead, caret: Caret, value: Int) {
         Logger.l("Set value to grid: $value / ${value.toChar()}")
-        val leastSignificantFirst = Integer.toBinaryString(value).reversed().padEnd(readHead.size, '0')
-
-        var bitIndex = 0
-        for (y in caret.y + readHead.height-1 downTo caret.y){
-            for (x in caret.x + readHead.width-1 downTo caret.x){
-                grid[y][x] = leastSignificantFirst[bitIndex] == '1'
-                bitIndex++
-                if(bitIndex >= leastSignificantFirst.length){
-                    return
-                }
-            }
-        }
+        val mostSignificantFirst = Integer.toBinaryString(value).padStart(readHead.size, '0')
+        grid.setRange(caret, readHead, mostSignificantFirst)
     }
 
     fun debugPrint(width: Int = 20, height: Int = 5){
         for (y in 0..height){
             for (x in 0..width){
-                print(if (grid[y][x]) "1 " else "_ " )
+                print(if (grid[x, y]) "1 " else "_ " )
             }
             println()
         }
@@ -85,7 +73,7 @@ class BitopiaryGrid(private val width: Int, private val height: Int){
                 } else if (isExec) {
                     addon = "x"
                 }
-                print(if (grid[y][x]) "1$addon" else "_$addon" )
+                print(if (grid[x, y]) "1$addon" else "_$addon" )
 
             }
             println()

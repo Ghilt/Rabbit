@@ -69,7 +69,7 @@ class ExecutionTrack(private val program: BitopiaryProgram,
     }
 
     fun print() {
-        print("printing : ${getInt()}")
+        print(getInt())
     }
 
     fun printCharacter() {

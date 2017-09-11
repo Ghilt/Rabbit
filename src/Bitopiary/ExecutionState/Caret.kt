@@ -2,7 +2,7 @@ package Bitopiary.ExecutionState
 
 import Bitopiary.OperatorType
 
-class Caret(var x :Int = 0, var y :Int = 0) {
+data class Caret(var x :Int = 0, var y :Int = 0) {
     constructor(caret: Caret) : this(caret.x, caret.y)
     constructor(x: Int, y: Int, readHead: ReadHead) : this(x * readHead.width, y * readHead.height)
 

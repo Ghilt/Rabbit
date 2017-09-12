@@ -45,7 +45,8 @@ class BitopiaryGrid(private val width: Int, private val height: Int){
 
     fun setInt(readHead: ReadHead, caret: Caret, value: Int) {
         Logger.l("Set value to grid: $value / ${value.toChar()}")
-        val mostSignificantFirst = Integer.toBinaryString(value).padStart(readHead.size, '0')
+        var mostSignificantFirst = Integer.toBinaryString(value).padStart(readHead.size, '0')
+        mostSignificantFirst = mostSignificantFirst.substring(mostSignificantFirst.length - readHead.size until mostSignificantFirst.length)
         grid.setRange(caret, readHead, mostSignificantFirst)
     }
 

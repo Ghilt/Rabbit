@@ -50,7 +50,7 @@ class BitopiaryGrid(private val width: Int, private val height: Int){
         grid.setRange(caret, readHead, mostSignificantFirst)
     }
 
-    fun debugPrint(width: Int = 20, height: Int = 5){
+    fun debugPrint(width: Int = 128, height: Int = 10){
         for (y in 0..height){
             for (x in 0..width){
                 print(if (grid[x, y]) "1 " else "_ " )

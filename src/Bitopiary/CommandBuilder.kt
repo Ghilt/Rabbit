@@ -60,7 +60,7 @@ class CommandBuilder(private val operator : Char){
         val canChainToInput = inputToCommand.isEmpty() || inputToCommand.lastIsDigit() && ch.isDigit()
 
         return when(standardInput) {
-            StandardInputType.Source -> !hasCommandModifier && ch.isDigit()
+            StandardInputType.Intrinsic -> !hasCommandModifier && ch.isDigit()
             StandardInputType.SourceNoDefault -> !hasCommandModifier && canChainToInput
             StandardInputType.Caret -> hasCommandModifier && canChainToInput
             StandardInputType.IO -> false

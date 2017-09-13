@@ -20,7 +20,7 @@ fun Char.toOperator(): OperatorType {
 }
 
 enum class StandardInputType {
-    Source, SourceNoDefault, Caret, IO
+    Intrinsic, SourceNoDefault, Caret, IO
 }
 
 class QueryParameter {
@@ -45,22 +45,22 @@ class QueryParameter {
 enum class OperatorType {
     MOVE_RIGHT {
         override val toCharacter = charArrayOf('>')
-        override val input = StandardInputType.Source
+        override val input = StandardInputType.Intrinsic
         override val instructionConstructor = ::MoveInstruction
     },
     MOVE_LEFT {
         override val toCharacter = charArrayOf('<')
-        override val input = StandardInputType.Source
+        override val input = StandardInputType.Intrinsic
         override val instructionConstructor = ::MoveInstruction
     },
     MOVE_UP {
         override val toCharacter = charArrayOf('^')
-        override val input = StandardInputType.Source
+        override val input = StandardInputType.Intrinsic
         override val instructionConstructor = ::MoveInstruction
     },
     MOVE_DOWN {
         override val toCharacter = charArrayOf('_')
-        override val input = StandardInputType.Source
+        override val input = StandardInputType.Intrinsic
         override val instructionConstructor = ::MoveInstruction
     },
     ADD {
@@ -120,12 +120,12 @@ enum class OperatorType {
     },
     INCREASE {
         override val toCharacter = charArrayOf('\'')
-        override val input = StandardInputType.Source
+        override val input = StandardInputType.Intrinsic
         override val instructionConstructor = ::VaryInstruction
     },
     DECREASE {
         override val toCharacter = charArrayOf(',')
-        override val input = StandardInputType.Source
+        override val input = StandardInputType.Intrinsic
         override val instructionConstructor = ::VaryInstruction
     },
     COPY {
@@ -188,7 +188,7 @@ enum class OperatorType {
     CONFIGURE_READHEAD {
         override val toCharacter = charArrayOf('£')
         override val instructionConstructor = ::ConfigureReadHeadInstruction
-        override val input = StandardInputType.Source
+        override val input = StandardInputType.Intrinsic
     },
     EXECUTE {
         override val toCharacter = charArrayOf('!')
@@ -200,7 +200,7 @@ enum class OperatorType {
     },
     NEW_CARET {
         override val toCharacter = charArrayOf('$')
-        override val input = StandardInputType.Source
+        override val input = StandardInputType.Intrinsic
         override val instructionConstructor = ::NewCaretInstruction
     },
     CHANGE_CARET {

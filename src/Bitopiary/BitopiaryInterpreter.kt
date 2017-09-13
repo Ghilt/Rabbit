@@ -6,13 +6,11 @@ import javax.print.attribute.IntegerSyntax
 fun main(args : Array<String>) {
 
     if (args.isEmpty()) {
-        println("Please provide a filepath as a command-line argument ${ Integer.toBinaryString((-1) shr 1)}")
+        //Testfile: "D:\\Files\\Code\\IntelliJ\\Bitopiary\\testFiles\\testLexing.bty"
+        println("Please provide a filepath as a command-line argument")
     }
 
-    val pathName = "D:\\Files\\Code\\IntelliJ\\Bitopiary\\testFiles\\testLexing.bty"
-
-    val interpreter = BitopiaryLexer(filePath = pathName)
+    val interpreter = BitopiaryLexer(filePath = args[0])
     interpreter.program.run()
-
 
 }

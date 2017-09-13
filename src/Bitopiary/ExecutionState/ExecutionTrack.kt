@@ -15,8 +15,8 @@ class ExecutionTrack(private val program: BitopiaryProgram,
     private var carets = ArrayList<Caret>()
     private val readHead = ReadHead()
     private val userInputStream = UserInputStream()
-    private val executeFromMemoryManager = ExecuteFromMemoryManager() // TODO make generic base
-    private val createExecutionTrackManager = NewExecutionTrackManager(program) // TODO make generic base
+    private val executeFromMemoryManager = ExecuteFromMemoryManager()
+    private val createExecutionTrackManager = NewExecutionTrackManager(program)
     var copyStack = CopyStack(this)
     var mod3Stacks = HashMap<OperatorType, Mod3Stack>()
     var loopStack = LoopStack(this)
@@ -129,7 +129,7 @@ class ExecutionTrack(private val program: BitopiaryProgram,
 
     fun queryForInformation(parameter: Char = grid.getChar(readHead, activeCaret)) {
         when (parameter){
-            QueryParameter.version -> setValue(BitopiaryProgram.version.toInt())
+            QueryParameter.version -> setValue(BitopiaryProgram.version)
             QueryParameter.readHeadWidth -> setValue(readHead.width)
             QueryParameter.readHeadHeight -> setValue(readHead.height)
             QueryParameter.activeCaret -> setValue(caretCounter)

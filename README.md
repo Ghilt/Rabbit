@@ -1,8 +1,9 @@
-# Bitopiary  
-![bitopiary2](https://user-images.githubusercontent.com/3304335/30387851-2aee32a2-98ae-11e7-89f1-18619c839791.png)
-# Bitopiary 
 
-A recreational esoteric language which sacrifices everything to be consistent but doesn't dare sacrifice enough of everything
+ <img align="right" src="https://user-images.githubusercontent.com/3304335/30387851-2aee32a2-98ae-11e7-89f1-18619c839791.png" width="250">
+ 
+ # Bitopiary 
+
+A recreational esoteric language which tries to do things. A little golf, a little 2d grid storage, a little consistency here and there and some other things. Inspired by many of the esoteric programming languages out there.
 
 ## Memory model
 
@@ -278,12 +279,11 @@ When using `Ð` the follwoing translation is made:
     Ạ Ḅ Ḍ Ẹ Ḥ Ị Ḳ Ḷ Ṃ Ṇ Ọ Ṛ Ṣ Ṭ Ụ Ṿ Ẉ Ỵ Ẓ Ȧ Ḃ Ċ Ḋ Ė Ḟ Ġ Ḣ İ Ŀ Ṁ Ṅ Ȯ Ṗ Ṙ Ṡ Ṫ Ẇ Ẋ Ẏ Ż
     0 1 2 3 4 ...                                                                 39
 
-    ạ ḅ ḍ ẹ ḥ ị ḳ ḷ ṃ ṇ ọ ṛ ṣ ṭ ụ ṿ ẉ ỵ ẓ ȧ ḃ ċ ḋ ė ḟ ġ ḣ ŀ ṁ ṅ ȯ ṗ ṙ ṡ ṫ ẇ ẋ ẏ ż
-    |   |   |                                                                   |
-   128 130 142 ...                                                             166
+     ạ ḅ ḍ ẹ ḥ ị ḳ ḷ ṃ ṇ ọ ṛ ṣ ṭ ụ ṿ ẉ ỵ ẓ ȧ ḃ ċ ḋ ė ḟ ġ ḣ ŀ ṁ ṅ ȯ ṗ ṙ ṡ ṫ ẇ ẋ ẏ ż
+     |   |   |                                                                   |
+    128 130 142 ...                                                             166
 
     ɲ = 208
     ɱ = 402
 
   
-![bitopiary2](https://user-images.githubusercontent.com/3304335/30387851-2aee32a2-98ae-11e7-89f1-18619c839791.png)

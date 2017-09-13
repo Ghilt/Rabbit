@@ -205,6 +205,7 @@ enum class OperatorType {
     },
     CHANGE_CARET {
         override val toCharacter = charArrayOf('\\')
+        override val input = StandardInputType.Intrinsic
         override val instructionConstructor = ::SwapCaretInstruction
     },
     QUERY_ENVIRONMENT {

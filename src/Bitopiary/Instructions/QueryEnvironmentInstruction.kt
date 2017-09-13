@@ -7,9 +7,9 @@ class QueryEnvironmentInstruction(operator: Char, modifyInputChannel: Boolean, i
 
     override fun execute(environment: ExecutionTrack) {
         if (modifyInputChannel) {
-            environment.queryForInformation(input.first())
-        } else {
             environment.queryForInformation()
+        } else {
+            environment.queryForInformation(input.first())
         }
     }
 }

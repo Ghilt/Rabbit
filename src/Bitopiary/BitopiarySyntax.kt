@@ -210,6 +210,7 @@ enum class OperatorType {
     },
     QUERY_ENVIRONMENT {
         override val toCharacter = charArrayOf('?')
+        override val input = StandardInputType.SourceNoDefault
         override val instructionConstructor = ::QueryEnvironmentInstruction
 
     },

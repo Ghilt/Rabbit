@@ -132,7 +132,9 @@ class ExecutionTrack(private val program: BitopiaryProgram,
             QueryParameter.version -> setValue(BitopiaryProgram.version)
             QueryParameter.readHeadWidth -> setValue(readHead.width)
             QueryParameter.readHeadHeight -> setValue(readHead.height)
+            QueryParameter.readHeadSize -> setValue(readHead.size)
             QueryParameter.activeCaret -> setValue(caretCounter)
+            QueryParameter.amountOfCarets -> setValue(carets.size)
             QueryParameter.caretX -> setValue(activeCaret.x)
             QueryParameter.caretY -> setValue(activeCaret.y)
             QueryParameter.maxVal -> setValue(Math.pow(2.0, (readHead.size).toDouble()).toInt() - 1 shr 1) // Do not understand why shifiting -1 does not work

@@ -28,17 +28,18 @@ class QueryParameter {
         var version = 'v'
         var readHeadWidth = 'w'
         var readHeadHeight = 'h'
+        var readHeadSize = 's'
         var activeCaret = 'c'
+        var amountOfCarets = 'a'
         var caretX = 'x'
         var caretY = 'y'
-        var maxVal = '^'
-        var minVal = '_'
+        var maxVal = 'M'
+        var minVal = 'm'
         var negativeSign = 'n'
 
         fun stack(parameter :Char) : Char?{
             return if (OperatorType.values().filter { it.usesStack }.map { it.toCharacter[0] }.contains(parameter)) parameter else null
         }
-
     }
 }
 

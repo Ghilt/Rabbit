@@ -37,22 +37,235 @@ Print Fibbonacci numbers
 
 `1$>;1[\:+\+\+]`
 
-## Syntax:
+## Syntax
 
-Instructions in Bitopiary are one character, almost all characters are considered instructions.
+Instructions in Bitopiary are one character, almost all characters are considered instructions. It is possible to write erroneous syntax but it is not as easy as in other languages. This is of course not really a good thing, which is somewhat fitting for this language.
 
 There are four default input modes for instructions:
  - Intrinsic: The instruction defaults to a set integer value unless followed by a integer value, then that is taken as input instead
  - Caret: The instruction take the value at the caret as input
  - Source: The instruction take the following integer or character from the source code as input
- - Input: Takes input from standard input
+ - I/O: Special for I/O instructions
 
 There also exists a special character the dot: `.` which modifies the preceding instruction in some way. Most often it swaps the input mode of the instruction from Caret -> Source or from Source/intrinsic -> Caret
-## List of instructions:
+
+## List of instructions
 
 #### Move instructions
- - `><_^` //right, left, down, up respectively
- - Intrinsic: read head size in relevant direction
+    > right
+    < Left
+    ^ Up
+    _ Down
+    
+    Default input: Intrinsic - read head size in relevant direction
 
-Note: the instruction `>1` moves the caret one bit to the right whilst `>` moves the caret by "read-head-width"-bits completely clearing the read head of the bits of the last location of the readhead
+<i>Note:</i> the instruction `>1` moves the caret one bit to the right whilst `>` moves the caret by "read-head-width"-bits completely clearing the read head of the bits of the last location of the readhead
+
+#### Arithmetic and bit-wise instructions
+
+The following instructions works the same way. They cycle by 3; they do different things depending if it's the first, second or third in the cycle. The first two states reads a value from input while the final instruction in the cycle outputs the result to the bitgrid. 
+
+    + plus
+    - minus
+    * multiply
+    / divide
+    % modulo
+    & and
+    | or
+    ¨ xor
+    ~ flip (invert)
+    « shift left
+    » shift right
+    
+    Default input: Caret
+
+If the modifier `.` is applied in stage 3 on any of these instructions, it will skip outputting for another cycle and take input.
+
+#### Loop instructions
+
+    ()
+    []
+    Default input: Caret
+
+In the snippiets below the first line is symbolising code where capital lettes symbolize any non []() instruction. The second line is the bracket's input which by default is the value at the caret is named on the third line.
+
+ The ordinary loop instructions checks the value under the caret and compares it to the value under the other loop instruction.  
+
+     [ABCD]
+     v1   v2
+    
+If v1 == v2 then exit loop
+     
+     ]ABCD[
+     v1   v2
+
+If v1 != v2 then exit loop
+    
+  
+Worth noting is that v1 is recorded as it is reached the frist time. The loop compares a value which might no longer be present in the bitgrid to a value in the bitgrid.
+
+    (ABCD)  
+    v1
+
+Loop v1 times
+
+    )ABCD( 
+         v1
+ 
+ Loop v1 times     
+    
+Using the inverted case here guarantees at least one iteration which can be useful. Loops can not overlap, the following is not two loops but the begining of four loops. Which if the program terminates before a matching end loop is executed will have done nothing
+
+    ( [ ) ] 
+    
+
+If you think those inverted bracket instructions are kind of ugly wait until you see the conditional construction, speaking of which
+
+#### Conditional instruction
+
+    {}
+    Default input: Caret
+    
+In the snippiets below the first line is symbolising code where capital lettes symbolize any non {} instruction. The second line is the bracket's input which by default is the value at the caret is named on the third line.
+
+    {ABCDE}FGHI{JKL}MNO
+    v1    v2   
+
+Lets look at the simplest case, the above means if v1 == v2 then when the last { is reached perform the instructions until } is reached then the conditional statment is over. If v1 != v2 then JKL is skipped.
+
+Simple. This is how an if X do Y else Z clause would look like:
+
+    {ABC}FGH}IJK{LMN{OPQ}RST
+    v1    v2 
+   
+if v1 == v2 do IJK else do OPQ. Clear as day!
+
+if-else-chain with an arbitary amount of branches works like this (the below is if-elseif-else):
+
+    {ABCD}EFGH}IJK{LMN}OPQ{RST}U{VXY{ZAB}
+    v1   v2          v3  v4
+   
+if v1 == v2 do IJK else if v3 == v4 do U else do ZAB. You can canstruct as many branches as you wish in this way. Below is the  same example again but with values and instructions not executed represented by underscores:
+
+    {ABCD}EFGH}___{LMN}OPQ{RST}_{VXY{ZAB}
+    7    13           8   8
+    
+That is almost all there is to conditions. The observant may have noticed that the conditional always start with a normal {}-bracket-pair and ends with a normal {}-bracket-pair with a number of inverted }{-bracket-pairs in between. That does not have to be the case; if you were to invert all the brackets in the snippets above you would still end up with valid Bitopiary code. All it would do would be to invert the conditions (va != v2, v3 != v4). I'll leave it as an excersize for the interested reader to determine which code will be run in the last example if all the brackets were inverted.  
+
+#### Incease/Decrease
+
+    ' increase
+    , decrease
+    Default input: Instrinsic 1
+
+Increases or decreases value under caret. 
+
+#### Copy
+
+    @ copy
+    Default input: Caret
+
+Similar to the arithmetic this is a cycle of 2. Copy the value at the caret at the first instruction and store it at the caret at the second instruction 
+
+#### Store
+
+    ; store
+    Default input: Source
+    
+Store input to instruction at caret. Usefull to transfer some data to the bitgrid from the source code
+
+#### I/O
+
+    = read
+    : print
+    Default input: I/O
+    
+Read reads from standard input and stores in bitgrid, and print prints to standard out.
+
+The `.` is special for these two instructions:
+  - Read can only store one character at a time to the bitgrid. The rest is stored for future use so `=.` uses this as input instead and do not require the user to enter anything.
+  - Normal print prints the byte represented as an integer,  `:.` prints a character
+  
+#### Configure read head
+  
+    £ configure readhead
+    Default input: Intrinsic: Doubles the size
+
+This is a 2-cyclic instruction first you configure width then height. (This is subject to be updated in future versions, a split for execution readhead and memory readhead is likely)
+
+#### Execute
+
+    ! execute
+    Default input: Caret
+    
+This is a 3 cyclic instruction which records what instruction to perform, then records what input to give to this instruction and then executes it as if it were a ordinary instruction being executed at current position of the caret.
+
+#### Terminate executiontrack
+
+    ¤ terminate
+    Alias: ...00000000
+    Default input: Caret
+    
+Terminates execution track. A completely empty blank instruction also does this.
+
+
+#### New caret
+
+    $ spawn new caret
+    Default input: Instrinsic 1
+    
+Spawns a new memory caret at current caret position. Input decides how many to create. You do not swap to the caret you created, the carets can be thought of as 'numbered' and the standard caret is the 0'th caret and the next one you creates is the 1'st and then the 2'nd one and so forth.
+
+#### Change active caret
+
+    \ Change caret
+    Default input: Instrinsic cycle to next caret
+    
+Cycles the active memory caret through all created carets as default. If `.`is used it chooses caret based on the order they were created instead instead. `\1` e.g. selects the caret you yourself created first in you program
+
+#### Start function
+    
+    # start function
+    Default input: Caret   
+   
+This is a 3 cyclic instruction which sets in motion a new execution track. The first instruction records what direction the new execution track shlla progress in. The second records where it will begin executing. The third records where it's default memory caret will be and then adds it to the pool of execution tracks in the program.
+
+#### Query environment
+    
+    ? query environment
+    Default input: Source
+    
+Query environment for the following information and store it in bitgrid
+
+    v = Bitopiary version
+    w = read head width
+    h = read head height
+    s = read head size
+    c = active caret number
+    a = amount of active carets
+    x = active caret x coordinate
+    y = active caret y coordinate
+    M = max value of integers depnding on your current read head
+    m = min value of integers depnding on your current read head
+    n = gives the negative sign for two's complement binary
+    arithmetic or bitwise instruction(+,-,* etc) = either zero or the first value of the ongoing instruction cycle
+    
+#### Character instructions
+
+    remaining characters or bit patterns
+    Default input: Source
+    
+A character instruction simply reads itself back into the memory and does nothing else. `.` is as of Bitopiary v.1 undefined
+    
+### Non instruction character
+
+Besides `.` one other special character is reserved, the cursive f below: 
+
+    ƒ 
+    
+It is a meta character which has a special meaning when read from the sourcefile. It is not written to the bit grid as the `.` is. The `ƒ` separates the source into execution tracks. The execution tracks are stored in the bitgrid above and below eachother one read head apart with the first one being the top one.
+
+You cannot specify direction as you can when adding execution track from the code.
+  
+
 

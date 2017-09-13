@@ -1,4 +1,4 @@
-# Bitopiary
+# Bitopiary 
 
 A recreational esoteric language which sacrifices everything to be consistent but doesn't dare sacrifice enough of everything
 
@@ -267,5 +267,5 @@ It is a meta character which has a special meaning when read from the sourcefile
 
 You cannot specify direction as you can when adding execution track from the code.
   
-
+![bitopiary2](https://user-images.githubusercontent.com/3304335/30387851-2aee32a2-98ae-11e7-89f1-18619c839791.png)
 

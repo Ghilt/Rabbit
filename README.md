@@ -259,13 +259,26 @@ A character instruction simply reads itself back into the memory and does nothin
     
 ### Non instruction character
 
-Besides `.` one other special character is reserved, the cursive f below: 
+Besides `.` two other special characters is reserved:
 
-    ƒ 
+    ƒ
+    Ð
     
-It is a meta character which has a special meaning when read from the sourcefile. It is not written to the bit grid as the `.` is. The `ƒ` separates the source into execution tracks. The execution tracks are stored in the bitgrid above and below eachother one read head apart with the first one being the top one.
+`ƒ` is a meta character which has a special meaning when read from the source file. It is not written to the bit grid as the `.` is. The `ƒ` separates the source into execution tracks. The execution tracks are stored in the bitgrid above and below each other one read head apart with the first one being the top one.
 
 You cannot specify direction as you can when adding execution track from the code.
-  
 
 
+`Ð` is similar to `ƒ` but instead of starting an execution track it just transfers its data chunk into the grid on it's corresponding row. It also employs a special encoding scheme to easier be able to transfer bytes which normally isn't printable.
+
+When using `Ð` the follwoing translation is made:
+
+    Ạ Ḅ Ḍ Ẹ Ḥ Ị Ḳ Ḷ Ṃ Ṇ Ọ Ṛ Ṣ Ṭ Ụ Ṿ Ẉ Ỵ Ẓ Ȧ Ḃ Ċ Ḋ Ė Ḟ Ġ Ḣ İ Ŀ Ṁ Ṅ Ȯ Ṗ Ṙ Ṡ Ṫ Ẇ Ẋ Ẏ Ż
+    0 1 2 3 4 ...                                                                    39
+
+    ạ ḅ ḍ ẹ ḥ ị ḳ ḷ ṃ ṇ ọ ṛ ṣ ṭ ụ ṿ ẉ ỵ ẓ ȧ ḃ ċ ḋ ė ḟ ġ ḣ ŀ ṁ ṅ ȯ ṗ ṙ ṡ ṫ ẇ ẋ ẏ ż
+    |   |   |                                                                 |
+   128 130 142 ...                                                           166
+
+   ɲ = 208
+   ɱ = 402

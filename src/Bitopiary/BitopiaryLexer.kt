@@ -20,10 +20,17 @@ class BitopiaryLexer(filePath: String) {
             source = reader.readText()
         }
         if (source.isNotEmpty()) {
-            val tracks = source.split(BitopiarySyntax.parallelExecution)
+            /** Split on meta characters, first is of type parallelExecution*/
+            val splitType = BitopiarySyntax.parallelExecution + source.filter { it == BitopiarySyntax.parallelExecution || it == BitopiarySyntax.loadData }
+            val tracks = source.split("${BitopiarySyntax.parallelExecution}","${BitopiarySyntax.loadData}")
             for ((index, track) in tracks.withIndex()) {
-                logOriginalSource(track)
-                loadSourceIntoProgramMemory(track, index)
+                if (track.isEmpty()) continue
+                if(splitType[index] == BitopiarySyntax.parallelExecution){
+                    logOriginalSource(track)
+                    loadSourceIntoProgramMemory(track, index)
+                } else {
+                    loadDataIntoGrid(track, index)
+                }
             }
         }
     }
@@ -50,6 +57,11 @@ class BitopiaryLexer(filePath: String) {
         program.loadInstructionTrackIntoMemory(chars, row)
         program.setExecutionTrack(Caret(0, row, readHead = defaultReadHead), Caret(0, row, readHead = defaultReadHead), OperatorType.MOVE_RIGHT)
     }
+
+    private fun loadDataIntoGrid(chars: String, row: Int) {
+        program.loadDataIntoMemory(chars, row)
+    }
+
 
     private fun checkMatchingBrackets(track: ArrayList<CommandBuilder>) : Boolean {
         val stack = Stack<CommandBuilder>()

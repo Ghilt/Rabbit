@@ -25,6 +25,7 @@ class BitopiaryProgram {
     }
 
     fun run(){
+        Logger.l(grid)
         while (tracks.isNotEmpty()) {
             tracks.forEach { it.execute()}
             tracks.removeAll(tracks.filter { it.isTerminated })
@@ -37,6 +38,14 @@ class BitopiaryProgram {
         val readHead = ReadHead()
         for(index in 0 until chars.length){
             grid.setInt(readHead, Caret(index, row, readHead), chars[index].toInt())
+        }
+        Logger.l(grid)
+    }
+
+    fun loadDataIntoMemory(chars: String, row: Int) {
+        val readHead = ReadHead()
+        for(index in 0 until chars.length){
+            grid.setInt(readHead, Caret(index, row, readHead), BitopiarySyntax.specialDecodeCharacter(chars[index]))
         }
         Logger.l(grid)
     }

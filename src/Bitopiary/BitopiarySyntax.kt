@@ -4,10 +4,23 @@ import Bitopiary.Instructions.*
 
 object BitopiarySyntax {
 
+    private val specialEncodingPart1 = "ẠḄḌẸḤỊḲḶṂṆỌṚṢṬỤṾẈỴẒȦḂĊḊĖḞĠḢİĿṀṄȮṖṘṠṪẆẊẎŻ"
+    private val specialEncodingPart2 = "ạḅḍẹḥịḳḷṃṇọṛṣṭụṿẉỵẓȧḃċḋėḟġḣŀṁṅȯṗṙṡṫẇẋẏż"
+
     /*Only meta character this far */
     val parallelExecution = 'ƒ'
+    val loadData = 'Ð'
 
     val commandModifier = OperatorType.MODIFIER
+
+    /** Convenience to easier be able to load the bytes 0-32 and 128-160 which is just 's in utf-8 encoding */
+    fun specialDecodeCharacter(c: Char): Int = when {
+        specialEncodingPart1.contains(c) -> specialEncodingPart1.indexOf(c)
+        specialEncodingPart2.contains(c) -> 128 + specialEncodingPart2.indexOf(c)
+        c == 'ɱ' -> parallelExecution.toInt()
+        c == 'ɲ' -> loadData.toInt()
+        else -> c.toInt()
+    }
 
 }
 

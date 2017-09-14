@@ -1,7 +1,5 @@
 package Bitopiary
 
-import javax.print.attribute.IntegerSyntax
-
 
 fun main(args : Array<String>) {
 
@@ -10,7 +8,7 @@ fun main(args : Array<String>) {
         println("Please provide a filepath as a command-line argument")
     }
 
-    val interpreter = BitopiaryLexer(filePath = args[0])
+    val interpreter = BitopiaryLexer(args[0], InterpreterFlagManager(args))
     interpreter.program.run()
 
 }

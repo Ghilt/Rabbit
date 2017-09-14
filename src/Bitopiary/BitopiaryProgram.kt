@@ -8,11 +8,12 @@ class BitopiaryProgram {
 
     companion object {
         var version = 1
+
     }
 
     private val tracks = ArrayList<ExecutionTrack>()
     private val tracksToBeAdded = ArrayList<ExecutionTrack>()
-    val grid = BitopiaryGrid(1000, 1000)
+    private val grid = BitopiaryGrid(1000, 1000)
 
 
     fun setExecutionTrack(startPoint: Caret, startMemoryPos: Caret, direction: OperatorType) {
@@ -47,6 +48,12 @@ class BitopiaryProgram {
         for(index in 0 until chars.length){
             grid.setInt(readHead, Caret(index, row, readHead), BitopiarySyntax.specialDecodeCharacter(chars[index]))
         }
+        Logger.l(grid)
+    }
+
+    fun loadDataIntoMemory(value: Int, row: Int) {
+        val readHead = ReadHead()
+        grid.setInt(readHead, Caret(0, row, readHead), value)
         Logger.l(grid)
     }
 

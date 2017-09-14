@@ -1,10 +1,21 @@
 package Bitopiary.ExecutionState
 
-data class ReadHead(var width: Int = 16, var height :Int = 2) {
+data class ReadHead(var width: Int = WIDTH, var height :Int = HEIGHT) {
+
+    companion object {
+        private var WIDTH = 8
+        private var HEIGHT = 4
+
+        fun setDefaults(width: Int, height: Int) {
+            WIDTH = width
+            HEIGHT = height
+        }
+    }
+
     val size: Int
         get() = width * height
 
-    var nextWidth = 0
+    private var nextWidth = 0
 
     /** Swap dimension affected every time*/
     var configurationAidDimensionFlag = true

@@ -285,5 +285,16 @@ When using `Ð` the follwoing translation is made:
     ɲ = 208
     ɱ = 402
 
+## Interpreter flags & input
+
+Input is path to source file then followed by any number of flags or inputs. If an argument is not preceded by a flag then it is taken as '-m' input, see below:
+
+`-r w,h` Configure default read head size
+`-m input` if it is parsable as an integer then it is read into the bitgrid as an integer otherwise as a sequence of character
+`-c input` load input as a sequence of character
+`-f filePath` load input from a file
+
+The input is loaded below any data from the source code.
+
   
 ![bitopiary2](https://user-images.githubusercontent.com/3304335/30387851-2aee32a2-98ae-11e7-89f1-18619c839791.png)

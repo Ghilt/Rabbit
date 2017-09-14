@@ -9,11 +9,13 @@ import Extensions.*
 import kotlin.collections.ArrayList
 
 
-class BitopiaryLexer(filePath: String) {
+class BitopiaryLexer(filePath: String, flagsManager: InterpreterFlagManager) {
 
     val program = BitopiaryProgram()
 
     init {
+        ReadHead.setDefaults(flagsManager.readHeadConfig.width, flagsManager.readHeadConfig.height)
+
         val stream = Files.newInputStream(Paths.get(filePath))
         var source = ""
         stream.buffered().reader().use { reader ->
@@ -31,6 +33,16 @@ class BitopiaryLexer(filePath: String) {
                 } else {
                     loadDataIntoGrid(track, index)
                 }
+            }
+
+            var inputIndex = tracks.size
+            for ((content, isDigit) in flagsManager.inputs) {
+                if (isDigit){
+                    loadDataIntoGrid(content.toInt(), inputIndex)
+                } else {
+                    loadDataIntoGrid(content, inputIndex)
+                }
+                inputIndex++;
             }
         }
     }
@@ -58,10 +70,8 @@ class BitopiaryLexer(filePath: String) {
         program.setExecutionTrack(Caret(0, row, readHead = defaultReadHead), Caret(0, row, readHead = defaultReadHead), OperatorType.MOVE_RIGHT)
     }
 
-    private fun loadDataIntoGrid(chars: String, row: Int) {
-        program.loadDataIntoMemory(chars, row)
-    }
-
+    private fun loadDataIntoGrid(chars: String, row: Int) = program.loadDataIntoMemory(chars, row)
+    private fun loadDataIntoGrid(value: Int, row: Int) = program.loadDataIntoMemory(value, row)
 
     private fun checkMatchingBrackets(track: ArrayList<CommandBuilder>) : Boolean {
         val stack = Stack<CommandBuilder>()

@@ -6,7 +6,7 @@ import Extensions.boolToBinary
 
 // https://discuss.kotlinlang.org/t/multi-dimensonal-arrays-are-a-pain-point-in-kotlin/561
 
-class BitopiaryGrid(private val width: Int, private val height: Int){
+class BitopiaryGrid(){
 
     private val grid = BitArrayGrid()
 

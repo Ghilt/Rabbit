@@ -13,7 +13,7 @@ class BitopiaryProgram {
 
     private val tracks = ArrayList<ExecutionTrack>()
     private val tracksToBeAdded = ArrayList<ExecutionTrack>()
-    private val grid = BitopiaryGrid(1000, 1000)
+    private val grid = BitopiaryGrid()
 
 
     fun setExecutionTrack(startPoint: Caret, startMemoryPos: Caret, direction: OperatorType) {

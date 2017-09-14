@@ -1,8 +1,9 @@
-# Bitopiary  
-![bitopiary2](https://user-images.githubusercontent.com/3304335/30387851-2aee32a2-98ae-11e7-89f1-18619c839791.png)
-# Bitopiary 
 
-A recreational esoteric language which sacrifices everything to be consistent but doesn't dare sacrifice enough of everything
+ <img align="right" src="https://user-images.githubusercontent.com/3304335/30387851-2aee32a2-98ae-11e7-89f1-18619c839791.png" width="250">
+ 
+ # Bitopiary 
+
+A recreational esoteric language which tries to do things. A little golf, a little 2d grid storage, a little consistency here and there and some other things. Inspired by many of the esoteric programming languages out there.
 
 ## Memory model
 
@@ -10,7 +11,11 @@ Bitopiary uses a grid of bits to store its data and the program itself. Each pro
 
 The carets are analogous to carets in a ordinary word processor, they mark where on the grid data will be read or stored. 
 
-Starting from the caret the read-head decides which bits will be read and interpreted as an integer or character (floats: Todo). The readhead marks a rectangular region which is read left to right, top to bottom. See image below for an example:(todo)
+Starting from the caret the read-head decides which bits will be read and interpreted as an integer or character (floats: coming soon, absolutely, they seem useful to have). The readhead marks a rectangular region which is read left to right, top to bottom.
+
+![caretreadhead](https://user-images.githubusercontent.com/3304335/30440141-f68fa5b8-9975-11e7-965b-f8d384bd99eb.png)
+
+In the image above you can see the default readhead dimensioned at 8x4 giving you 32 bits by default, the caret is also marked. If the program would read and integer in this position shown it would give 7168. Note: Numbers are signed and represented in two's complement.
 
 ## Execution
 
@@ -26,18 +31,7 @@ An ExecutionTrack is an entity which contains:
 
 Note that an Executiontrack does not contain its own bitgrid, it operates on the one shared by all execution tracks in the program. This allows you to organize your code into execution tracks and then have them interact very easily.
 
-The source code of a simple programs only execution track by default goes to the first row of the grid and is read from left to right. When using multiple execution tracks they take turns executing their instructions and do so in a synchronized fashion until they have all finished. For more details see instruction section
-
-
-## Examples
-
-HelloWorld:
-
-`HelloWorldH[:.>]`
-
-Print Fibbonacci numbers
-
-`1$>;1[\:+\+\+]`
+The source code of a simple programs only execution track by default goes to the first row of the grid and is read from left to right. When using multiple execution tracks they take turns executing their instructions and do so in a synchronized fashion until they have all finished. For more details see instruction section   
 
 ## Syntax
 
@@ -51,7 +45,38 @@ There are four default input modes for instructions:
 
 There also exists a special character the dot: `.` which modifies the preceding instruction in some way. Most often it swaps the input mode of the instruction from Caret -> Source or from Source/intrinsic -> Caret
 
+### Examples
+
+#### HelloWorld:
+
+`HelloWorldH[:.>]`
+
+#### Print Fibbonacci numbers
+
+`1$>;1[\:+\+\+]`
+
+Step by step explanation:
+Default readhead: 8 wide, 4 high
+Default caret: x = 0, y = 0
+
+ - `1`: store 1 at C1(0,0)
+ - `$`: create C2(0,0) at C1(0,0)
+ - `>`: move C1(0,0) -> C1(8,0)
+ - `;1`: store 1 at C1(8,0) // We need to use explicit store instruction here to separate the number from the move command
+ - `[`: start loop, record value at C1(8,0), which is 1
+ - `\`: swap active caret to C2(0,0)
+ - `:`: print value at C2(0,0), which is 1, to standard output 
+ - `+`: record value at C2(0,0), which is 1, to be added
+ - `\`: swap active caret to C1(8,0)
+ - `+`: record value at C1(8,0), which is 1, to be added
+ - `\`: swap active caret to C2(0,0)
+ - `+`: perform addition of prepared values and store at C2(0,0), 1 + 1 = 2
+ - `]`: compare value of active caret C2(0,0) with recorded value of loop 1 != 2 so continue
+ - Then the next loop cycle start at `\` as you'd expect. Since there are 3 caret swaps in the loop and only 2 carets it all works out brilliantly. The loop never ends.
+
 ## List of instructions
+
+Here follows a complete listing of all instructions grouped by similarity.
 
 #### Move instructions
     > right
@@ -175,18 +200,6 @@ Similar to the arithmetic this is a cycle of 2. Copy the value at the caret at t
     Default input: Source
     
 Store input to instruction at caret. Usefull to transfer some data to the bitgrid from the source code
-
-#### I/O
-
-    = read
-    : print
-    Default input: I/O
-    
-Read reads from standard input and stores in bitgrid, and print prints to standard out.
-
-The `.` is special for these two instructions:
-  - Read can only store one character at a time to the bitgrid. The rest is stored for future use so `=.` uses this as input instead and do not require the user to enter anything.
-  - Normal print prints the byte represented as an integer,  `:.` prints a character
   
 #### Configure read head
   
@@ -209,7 +222,6 @@ This is a 3 cyclic instruction which records what instruction to perform, then r
     Default input: Caret
     
 Terminates execution track. A completely empty blank instruction also does this.
-
 
 #### New caret
 
@@ -251,7 +263,19 @@ Query environment for the following information and store it in bitgrid
     m = min value of integers depnding on your current read head
     n = gives the negative sign for two's complement binary
     arithmetic or bitwise instruction(+,-,* etc) = either zero or the first value of the ongoing instruction cycle
+ 
+#### I/O
+
+    = read
+    : print
+    Default input: I/O
     
+Read reads from standard input and stores in bitgrid, and print prints to standard out.
+
+The `.` is special for these two instructions:
+  - Read can only store one character at a time to the bitgrid. The rest is stored for future use so `=.` uses this as input instead and do not require the user to enter anything.
+  - Normal print prints the byte represented as an integer,  `:.` prints a character
+ 
 #### Character instructions
 
     remaining characters or bit patterns
@@ -278,9 +302,9 @@ When using `Ð` the follwoing translation is made:
     Ạ Ḅ Ḍ Ẹ Ḥ Ị Ḳ Ḷ Ṃ Ṇ Ọ Ṛ Ṣ Ṭ Ụ Ṿ Ẉ Ỵ Ẓ Ȧ Ḃ Ċ Ḋ Ė Ḟ Ġ Ḣ İ Ŀ Ṁ Ṅ Ȯ Ṗ Ṙ Ṡ Ṫ Ẇ Ẋ Ẏ Ż
     0 1 2 3 4 ...                                                                 39
 
-    ạ ḅ ḍ ẹ ḥ ị ḳ ḷ ṃ ṇ ọ ṛ ṣ ṭ ụ ṿ ẉ ỵ ẓ ȧ ḃ ċ ḋ ė ḟ ġ ḣ ŀ ṁ ṅ ȯ ṗ ṙ ṡ ṫ ẇ ẋ ẏ ż
-    |   |   |                                                                   |
-   128 130 142 ...                                                             166
+     ạ ḅ ḍ ẹ ḥ ị ḳ ḷ ṃ ṇ ọ ṛ ṣ ṭ ụ ṿ ẉ ỵ ẓ ȧ ḃ ċ ḋ ė ḟ ġ ḣ ŀ ṁ ṅ ȯ ṗ ṙ ṡ ṫ ẇ ẋ ẏ ż
+     |   |   |                                                                   |
+    128 130 142 ...                                                             166
 
     ɲ = 208
     ɱ = 402
@@ -297,4 +321,3 @@ Input is path to source file then followed by any number of flags or inputs. If 
 The input is loaded below any data from the source code.
 
   
-![bitopiary2](https://user-images.githubusercontent.com/3304335/30387851-2aee32a2-98ae-11e7-89f1-18619c839791.png)

@@ -311,13 +311,17 @@ When using `Ð` the follwoing translation is made:
 
 ## Interpreter flags & input
 
-Input is path to source file then followed by any number of flags or inputs. If an argument is not preceded by a flag then it is taken as '-m' input, see below:
+The interpreter is used:
 
-`-r w,h` Configure default read head size
-`-m input` if it is parsable as an integer then it is read into the bitgrid as an integer otherwise as a sequence of character
-`-c input` load input as a sequence of character
-`-f filePath` load input from a file
+path-to-source-file [flag input | input]
 
-The input is loaded below any data from the source code.
+If an argument is not preceded by a flag then it is taken as '-m' input, see below:
+
+- `-r width,height` Configure default read head size (comma separated)
+- `-m input` if input is parsable as an integer then it is read into the bitgrid as an integer otherwise as a sequence of characters
+- `-c input` load input as a sequence of characters
+- `-f filePath` load input from a file
+
+The input is loaded into the bitgrid below any data from the source code.
 
   

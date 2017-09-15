@@ -43,7 +43,7 @@ There are four default input modes for instructions:
  - Source: The instruction take the following integer or character from the source code as input
  - I/O: Special for I/O instructions
 
-There also exists a special character the dot: `.` which modifies the preceding instruction in some way. Most often it swaps the input mode of the instruction from Caret -> Source or from Source/intrinsic -> Caret
+There also exists a special character, the dot: `.` which modifies the preceding instruction in some way. Most often it swaps the input mode of the instruction from Caret -> Source or from Source/Intrinsic -> Caret
 
 ### Examples
 
@@ -78,6 +78,8 @@ Default caret: x = 0, y = 0
 
 Here follows a complete listing of all instructions grouped by similarity.
 
+Some instructions will be described as 2-cyclic or 3-cyclic. That means they do different things depending if it's the first, second (or third) instruction in the 'cycle'. Most often these instructions are for operations that require more than one input and output.  
+
 #### Move instructions
     > right
     < Left
@@ -86,11 +88,11 @@ Here follows a complete listing of all instructions grouped by similarity.
     
     Default input: Intrinsic - read head size in relevant direction
 
-<i>Note:</i> the instruction `>1` moves the caret one bit to the right whilst `>` moves the caret by "read-head-width"-bits completely clearing the read head of the bits of the last location of the readhead
+<i>Note:</i> the instruction `>1` moves the caret one bit to the right whilst `>` moves the caret by "read-head-width"-bits completely clearing the read head of the bits of the last location of the readhead,
 
 #### Arithmetic and bit-wise instructions
 
-The following instructions works the same way. They cycle by 3; they do different things depending if it's the first, second or third in the cycle. The first two states reads a value from input while the final instruction in the cycle outputs the result to the bitgrid. 
+These instruction are 3-cyclic and all function the same way. The first two instructions read a value from input while the final instruction in the cycle outputs the result to the bitgrid. 
 
     + plus
     - minus
@@ -114,7 +116,7 @@ If the modifier `.` is applied in stage 3 on any of these instructions, it will 
     []
     Default input: Caret
 
-In the snippiets below the first line is symbolising code where capital lettes symbolize any non []() instruction. The second line is the bracket's input which by default is the value at the caret is named on the third line.
+In the snippets below the first line is symbolising code where capital lettes symbolize any non []() instruction. The second line is the bracket's input which by default is the value at the caret is named on the third line.
 
  The ordinary loop instructions checks the value under the caret and compares it to the value under the other loop instruction.  
 
@@ -153,7 +155,7 @@ If you think those inverted bracket instructions are kind of ugly wait until you
     {}
     Default input: Caret
     
-In the snippiets below the first line is symbolising code where capital lettes symbolize any non {} instruction. The second line is the bracket's input which by default is the value at the caret is named on the third line.
+In the snippets below the first line is symbolising code where capital lettes symbolize any non {} instruction. The second line is the bracket's input which by default is the value at the caret is named on the third line.
 
     {ABCDE}FGHI{JKL}MNO
     v1    v2   
@@ -192,7 +194,7 @@ Increases or decreases value under caret.
     @ copy
     Default input: Caret
 
-Similar to the arithmetic this is a cycle of 2. Copy the value at the caret at the first instruction and store it at the caret at the second instruction 
+This is a 2-cyclic instruction. Copy the value at the caret at the first instruction and store it at the caret at the second instruction 
 
 #### Store
 
@@ -206,14 +208,14 @@ Store input to instruction at caret. Usefull to transfer some data to the bitgri
     £ configure readhead
     Default input: Intrinsic: Doubles the size
 
-This is a 2-cyclic instruction first you configure width then height. (This is subject to be updated in future versions, a split for execution readhead and memory readhead is likely)
+This is a 2-cyclic instruction. First you configure width, then height, only when you have configured both (a.k.a on the second instruction) does the change take effect. (This is subject to be updated in future versions, a split for execution readhead and memory readhead is likely)
 
 #### Execute
 
     ! execute
     Default input: Caret
     
-This is a 3 cyclic instruction which records what instruction to perform, then records what input to give to this instruction and then executes it as if it were a ordinary instruction being executed at current position of the caret.
+This is a 3 cyclic instruction. It records what instruction to perform, then records what input to give to this instruction and then executes it at the third instruction. The instruction is executed as if it were a ordinary instruction being executed.
 
 #### Terminate executiontrack
 
@@ -235,14 +237,14 @@ Spawns a new memory caret at current caret position. Input decides how many to c
     \ Change caret
     Default input: Instrinsic cycle to next caret
     
-Cycles the active memory caret through all created carets as default. If `.`is used it chooses caret based on the order they were created instead instead. `\1` e.g. selects the caret you yourself created first in you program
+Cycles the active memory caret through all created carets as default. If `.`is used it chooses caret based on the order they were created instead instead. `\1` e.g. selects the caret you yourself created first in your program
 
 #### Start function
     
     # start function
     Default input: Caret   
    
-This is a 3 cyclic instruction which sets in motion a new execution track. The first instruction records what direction the new execution track shlla progress in. The second records where it will begin executing. The third records where it's default memory caret will be and then adds it to the pool of execution tracks in the program.
+This is a 3 cyclic instruction. It sets in motion a new execution track. The first instruction records what direction the new execution track will progress in. The second records where it will begin executing. The third records where it's default memory caret will be and then adds it to the pool of execution tracks in the program.
 
 #### Query environment
     

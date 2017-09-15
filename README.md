@@ -1,13 +1,13 @@
 
  <img align="right" src="https://user-images.githubusercontent.com/3304335/30387851-2aee32a2-98ae-11e7-89f1-18619c839791.png" width="250">
  
- # Bitopiary 
+ # Rabbit~ 
 
 A recreational esoteric language which tries to do things. A little golf, a little 2d grid storage, a little consistency here and there and some other things. Inspired by many of the esoteric programming languages out there.
 
 ## Memory model
 
-Bitopiary uses a grid of bits to store its data and the program itself. Each program has exactly one 'bitgrid'. The bits are modified and interpreted with help of concepts called 'caret' and 'read head'. 
+Rabbit~ uses a grid of bits to store its data and the program itself. Each program has exactly one 'bitgrid'. The bits are modified and interpreted with help of concepts called 'caret' and 'read head'. 
 
 The carets are analogous to carets in a ordinary word processor, they mark where on the grid data will be read or stored. 
 
@@ -35,7 +35,7 @@ The source code of a simple programs only execution track by default goes to the
 
 ## Syntax
 
-Instructions in Bitopiary are one character, almost all characters are considered instructions. It is possible to write erroneous syntax but it is not as easy as in other languages. This is of course not really a good thing, which is somewhat fitting for this language.
+Instructions in Rabbit~ are one character, almost all characters are considered instructions. It is possible to write erroneous syntax but it is not as easy as in other languages. This is of course not really a good thing, which is somewhat fitting for this language.
 
 There are four default input modes for instructions:
  - Intrinsic: The instruction defaults to a set integer value unless followed by a integer value, then that is taken as input instead
@@ -177,7 +177,7 @@ if v1 == v2 do IJK else if v3 == v4 do U else do ZAB. You can canstruct as many 
     {ABCD}EFGH}___{LMN}OPQ{RST}_{VXY{ZAB}
     7    13           8   8
     
-That is almost all there is to conditions. The observant may have noticed that the conditional always start with a normal {}-bracket-pair and ends with a normal {}-bracket-pair with a number of inverted }{-bracket-pairs in between. That does not have to be the case; if you were to invert all the brackets in the snippets above you would still end up with valid Bitopiary code. All it would do would be to invert the conditions (va != v2, v3 != v4). I'll leave it as an excersize for the interested reader to determine which code will be run in the last example if all the brackets were inverted.  
+That is almost all there is to conditions. The observant may have noticed that the conditional always start with a normal {}-bracket-pair and ends with a normal {}-bracket-pair with a number of inverted }{-bracket-pairs in between. That does not have to be the case; if you were to invert all the brackets in the snippets above you would still end up with valid Rabbit~ code. All it would do would be to invert the conditions (va != v2, v3 != v4). I'll leave it as an excersize for the interested reader to determine which code will be run in the last example if all the brackets were inverted.  
 
 #### Incease/Decrease
 
@@ -251,7 +251,7 @@ This is a 3 cyclic instruction which sets in motion a new execution track. The f
     
 Query environment for the following information and store it in bitgrid
 
-    v = Bitopiary version
+    v = Rabbit~ version
     w = read head width
     h = read head height
     s = read head size
@@ -281,7 +281,7 @@ The `.` is special for these two instructions:
     remaining characters or bit patterns
     Default input: Source
     
-A character instruction simply reads itself back into the memory and does nothing else. `.` is as of Bitopiary v.1 undefined
+A character instruction simply reads itself back into the memory and does nothing else. A character isntruction modified with `.` is as of Rabbit~ v.1 undefined
     
 ### Non instruction character
 

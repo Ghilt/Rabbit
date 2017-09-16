@@ -182,6 +182,7 @@ enum class OperatorType {
     END_Q_LOOP {
         override val toCharacter = charArrayOf(')')
         override val isBracket = true
+        override val isRestrictable = false /**Doing zero iterations with a q_loop suspends execution; needs to be unsuspended by this instruction */
         override fun matches(type: OperatorType) = type == BEGIN_Q_LOOP
         override val instructionConstructor = ::BracketInstruction
     },

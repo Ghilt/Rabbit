@@ -50,8 +50,8 @@ class ConditionalStack(private val environment : ExecutionTrack) {
 
         when {
             last -> finishUpChain()
-            waitingForFinish -> restrictInstructions(startPair)
-            startPair -> handleStartPair(awaitingCondition, conditionTrue)
+            waitingForFinish -> restrictInstructions(startPair, nextInstruction)
+            startPair -> handleStartPair(awaitingCondition, conditionTrue, nextInstruction)
             null != toBePaired -> handleEndPair(awaitingCondition, conditionTrue, marker, toBePaired, nextInstruction)
         }
 
@@ -82,17 +82,17 @@ class ConditionalStack(private val environment : ExecutionTrack) {
         marker.awaitingCondition = !awaitingCondition
     }
 
-    private fun handleStartPair(awaitingCondition: Boolean, conditionTrue: Boolean) {
+    private fun handleStartPair(awaitingCondition: Boolean, conditionTrue: Boolean, instruction: ConditionalInstruction) {
         if(awaitingCondition){
             //Do nothing
         } else if (!conditionTrue){
-            environment.restrictInstructions()
+            environment.restrictInstructions(instruction.type)
         }
     }
 
-    private fun restrictInstructions(startPair: Boolean) {
+    private fun restrictInstructions(startPair: Boolean, instruction: ConditionalInstruction) {
         if(startPair){
-            environment.restrictInstructions()
+            environment.restrictInstructions(instruction.type)
         } else {
             environment.enableInstructions()
         }

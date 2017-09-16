@@ -11,8 +11,8 @@ class BracketInstruction(operator: Char, modifyInputChannel: Boolean, input: Arr
 
     fun conditionMet(counter: Int, valueOfStart: Int, valueOfEnd: Int): Boolean{
         return when (type) {
-            OperatorType.BEGIN_Q_LOOP -> counter == valueOfStart
-            OperatorType.END_Q_LOOP -> counter == valueOfEnd
+            OperatorType.BEGIN_Q_LOOP -> counter >= valueOfStart
+            OperatorType.END_Q_LOOP -> counter >= valueOfEnd
             OperatorType.BEGIN_LOOP -> valueOfStart == valueOfEnd
             OperatorType.END_LOOP -> valueOfStart != valueOfEnd
             OperatorType.BEGIN_IF -> valueOfStart == valueOfEnd
@@ -25,4 +25,6 @@ class BracketInstruction(operator: Char, modifyInputChannel: Boolean, input: Arr
         true -> input.toInt()
         false ->  valueAtCaret
     }
+
+    fun doZeroIterations(relevantValue: Int): Boolean = relevantValue == 0 && type == OperatorType.BEGIN_Q_LOOP
 }

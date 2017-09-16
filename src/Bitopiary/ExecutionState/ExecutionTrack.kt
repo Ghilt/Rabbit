@@ -3,14 +3,19 @@ package Bitopiary.ExecutionState
 import Bitopiary.*
 import Extensions.*
 
-class ExecutionTrack(private val program: BitopiaryProgram,
+class ExecutionTrack(program: BitopiaryProgram,
                      private val grid: BitopiaryGrid,
                      private val executionDirection: OperatorType,
                      private val executionPointer: Caret,
                      startMemoryPos: Caret) {
 
     var isTerminated = false
-    private var restrictInstructions = false
+    data class Restriction(val restricted: Boolean = false, internal val source: OperatorType = OperatorType.NO_OPERATION) {
+        fun isBy(sourceOfRestriction: OperatorType): Boolean = sourceOfRestriction == source
+
+    }
+
+    private var restrictInstructions = Restriction()
     private var caretCounter = 0
     private var carets = ArrayList<Caret>()
     private val readHead = ReadHead()
@@ -44,7 +49,7 @@ class ExecutionTrack(private val program: BitopiaryProgram,
         Logger.l(grid, activeCaret, executionPointer)
         val (size, instruction) = CommandBuilder.readInstructionFromMemory(grid, readHead, executionPointer, executionDirection)
         executionPointer.moveCaret(executionDirection, readHead, size)
-        if (restrictInstructions){
+        if (restrictInstructions.restricted){
             instruction.restrictedExecute(this)
         } else {
             Logger.l(this, "Executing: ${instruction.toLogString()} ExecCaret: $executionPointer + MemCaret: $activeCaret")
@@ -84,14 +89,17 @@ class ExecutionTrack(private val program: BitopiaryProgram,
     }
 
     fun enableInstructions() {
-        restrictInstructions = false
+        restrictInstructions = Restriction()
     }
 
-    fun restrictInstructions() {
-        restrictInstructions = true
+    fun restrictInstructions(source: OperatorType) {
+        restrictInstructions = Restriction(true, source)
     }
 
-    fun isRestricted(): Boolean = restrictInstructions
+    fun restrictedBy(): OperatorType = restrictInstructions.source
+
+    fun isRestricted(): Boolean = restrictInstructions.restricted
+
 
     fun configureReadHead(dimensionDouble: Boolean = false, value: Int = getInt()) {
         if(dimensionDouble){

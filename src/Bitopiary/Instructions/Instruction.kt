@@ -9,7 +9,7 @@ import Bitopiary.toOperator
 abstract class Instruction (val operator: Char, internal val modifyInputChannel: Boolean, internal val input: ArrayList<Char>, internal val type: OperatorType){
     abstract fun execute(environment: ExecutionTrack)
     fun restrictedExecute(environment: ExecutionTrack) {
-        if (!type.isRestrictable){
+        if (!type.isRestrictable && type.matches(environment.restrictedBy())) {
             execute(environment)
         }
     }

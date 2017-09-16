@@ -28,7 +28,13 @@ class LoopStack(private val environment : ExecutionTrack) {
             true -> instruction.input.toInt()
             false -> environment.getInt()
         }
-        stack.add(LoopMarker(0, instruction, relevantValue, environment.getExecutionCaretPosition()))
+
+        if (instruction.doZeroIterations(relevantValue)){
+            environment.restrictInstructions(instruction.type)
+        }
+
+        stack.add(LoopMarker(1, instruction, relevantValue, environment.getExecutionCaretPosition()))
+
     }
 
     private fun endLoopIteration(endInstruction: BracketInstruction){
@@ -37,6 +43,7 @@ class LoopStack(private val environment : ExecutionTrack) {
         val valueOfEnd = endInstruction.getValue(environment.getInt())
         if (startInstruction.conditionMet(counter, valueOfStart, valueOfEnd)){
             stack.pop()
+            environment.enableInstructions()
             Logger.l(environment, "Exiting Loop at $counter iterations")
         } else {
             stack.peek().increaseLoopCounter()

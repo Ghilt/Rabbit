@@ -1,13 +1,13 @@
 
  <img align="right" src="https://user-images.githubusercontent.com/3304335/30387851-2aee32a2-98ae-11e7-89f1-18619c839791.png" width="250">
  
- # Bitopiary 
+ # Rabbit~ 
 
 A recreational esoteric language which tries to do things. A little golf, a little 2d grid storage, a little consistency here and there and some other things. Inspired by many of the esoteric programming languages out there.
 
 ## Memory model
 
-Bitopiary uses a grid of bits to store its data and the program itself. Each program has exactly one 'bitgrid'. The bits are modified and interpreted with help of concepts called 'caret' and 'read head'. 
+Rabbit~ uses a grid of bits to store its data and the program itself. Each program has exactly one 'bitgrid'. The bits are modified and interpreted with help of concepts called 'caret' and 'read head'. 
 
 The carets are analogous to carets in a ordinary word processor, they mark where on the grid data will be read or stored. 
 
@@ -35,7 +35,7 @@ The source code of a simple programs only execution track by default goes to the
 
 ## Syntax
 
-Instructions in Bitopiary are one character, almost all characters are considered instructions. It is possible to write erroneous syntax but it is not as easy as in other languages. This is of course not really a good thing, which is somewhat fitting for this language.
+Instructions in Rabbit~ are one character, almost all characters are considered instructions. It is possible to write erroneous syntax but it is not as easy as in other languages. This is of course not really a good thing, which is somewhat fitting for this language.
 
 There are four default input modes for instructions:
  - Intrinsic: The instruction defaults to a set integer value unless followed by a integer value, then that is taken as input instead
@@ -43,7 +43,7 @@ There are four default input modes for instructions:
  - Source: The instruction take the following integer or character from the source code as input
  - I/O: Special for I/O instructions
 
-There also exists a special character the dot: `.` which modifies the preceding instruction in some way. Most often it swaps the input mode of the instruction from Caret -> Source or from Source/intrinsic -> Caret
+There also exists a special character, the dot: `.` which modifies the preceding instruction in some way. Most often it swaps the input mode of the instruction from Caret -> Source or from Source/Intrinsic -> Caret
 
 ### Examples
 
@@ -78,6 +78,8 @@ Default caret: x = 0, y = 0
 
 Here follows a complete listing of all instructions grouped by similarity.
 
+Some instructions will be described as 2-cyclic or 3-cyclic. That means they do different things depending if it's the first, second (or third) instruction in the 'cycle'. Most often these instructions are for operations that require more than one input and output.  
+
 #### Move instructions
     > right
     < Left
@@ -86,11 +88,11 @@ Here follows a complete listing of all instructions grouped by similarity.
     
     Default input: Intrinsic - read head size in relevant direction
 
-<i>Note:</i> the instruction `>1` moves the caret one bit to the right whilst `>` moves the caret by "read-head-width"-bits completely clearing the read head of the bits of the last location of the readhead
+<i>Note:</i> the instruction `>1` moves the caret one bit to the right whilst `>` moves the caret by "read-head-width"-bits completely clearing the read head of the bits of the last location of the readhead,
 
 #### Arithmetic and bit-wise instructions
 
-The following instructions works the same way. They cycle by 3; they do different things depending if it's the first, second or third in the cycle. The first two states reads a value from input while the final instruction in the cycle outputs the result to the bitgrid. 
+These instruction are 3-cyclic and all function the same way. The first two instructions read a value from input while the final instruction in the cycle outputs the result to the bitgrid. 
 
     + plus
     - minus
@@ -114,7 +116,7 @@ If the modifier `.` is applied in stage 3 on any of these instructions, it will 
     []
     Default input: Caret
 
-In the snippiets below the first line is symbolising code where capital lettes symbolize any non []() instruction. The second line is the bracket's input which by default is the value at the caret is named on the third line.
+In the snippets below the first line is symbolising code where capital lettes symbolize any non []() instruction. The second line is the bracket's input which by default is the value at the caret is named on the third line.
 
  The ordinary loop instructions checks the value under the caret and compares it to the value under the other loop instruction.  
 
@@ -153,7 +155,7 @@ If you think those inverted bracket instructions are kind of ugly wait until you
     {}
     Default input: Caret
     
-In the snippiets below the first line is symbolising code where capital lettes symbolize any non {} instruction. The second line is the bracket's input which by default is the value at the caret is named on the third line.
+In the snippets below the first line is symbolising code where capital lettes symbolize any non {} instruction. The second line is the bracket's input which by default is the value at the caret is named on the third line.
 
     {ABCDE}FGHI{JKL}MNO
     v1    v2   
@@ -177,7 +179,7 @@ if v1 == v2 do IJK else if v3 == v4 do U else do ZAB. You can canstruct as many 
     {ABCD}EFGH}___{LMN}OPQ{RST}_{VXY{ZAB}
     7    13           8   8
     
-That is almost all there is to conditions. The observant may have noticed that the conditional always start with a normal {}-bracket-pair and ends with a normal {}-bracket-pair with a number of inverted }{-bracket-pairs in between. That does not have to be the case; if you were to invert all the brackets in the snippets above you would still end up with valid Bitopiary code. All it would do would be to invert the conditions (va != v2, v3 != v4). I'll leave it as an excersize for the interested reader to determine which code will be run in the last example if all the brackets were inverted.  
+That is almost all there is to conditions. The observant may have noticed that the conditional always start with a normal {}-bracket-pair and ends with a normal {}-bracket-pair with a number of inverted }{-bracket-pairs in between. That does not have to be the case; if you were to invert all the brackets in the snippets above you would still end up with valid Rabbit~ code. All it would do would be to invert the conditions (va != v2, v3 != v4). I'll leave it as an excersize for the interested reader to determine which code will be run in the last example if all the brackets were inverted.  
 
 #### Incease/Decrease
 
@@ -192,7 +194,7 @@ Increases or decreases value under caret.
     @ copy
     Default input: Caret
 
-Similar to the arithmetic this is a cycle of 2. Copy the value at the caret at the first instruction and store it at the caret at the second instruction 
+This is a 2-cyclic instruction. Copy the value at the caret at the first instruction and store it at the caret at the second instruction 
 
 #### Store
 
@@ -206,14 +208,14 @@ Store input to instruction at caret. Usefull to transfer some data to the bitgri
     £ configure readhead
     Default input: Intrinsic: Doubles the size
 
-This is a 2-cyclic instruction first you configure width then height. (This is subject to be updated in future versions, a split for execution readhead and memory readhead is likely)
+This is a 2-cyclic instruction. First you configure width, then height, only when you have configured both (a.k.a on the second instruction) does the change take effect. (This is subject to be updated in future versions, a split for execution readhead and memory readhead is likely)
 
 #### Execute
 
     ! execute
     Default input: Caret
     
-This is a 3 cyclic instruction which records what instruction to perform, then records what input to give to this instruction and then executes it as if it were a ordinary instruction being executed at current position of the caret.
+This is a 3 cyclic instruction. It records what instruction to perform, then records what input to give to this instruction and then executes it at the third instruction. The instruction is executed as if it were a ordinary instruction being executed.
 
 #### Terminate executiontrack
 
@@ -235,14 +237,14 @@ Spawns a new memory caret at current caret position. Input decides how many to c
     \ Change caret
     Default input: Instrinsic cycle to next caret
     
-Cycles the active memory caret through all created carets as default. If `.`is used it chooses caret based on the order they were created instead instead. `\1` e.g. selects the caret you yourself created first in you program
+Cycles the active memory caret through all created carets as default. If `.`is used it chooses caret based on the order they were created instead instead. `\1` e.g. selects the caret you yourself created first in your program
 
 #### Start function
     
     # start function
     Default input: Caret   
    
-This is a 3 cyclic instruction which sets in motion a new execution track. The first instruction records what direction the new execution track shlla progress in. The second records where it will begin executing. The third records where it's default memory caret will be and then adds it to the pool of execution tracks in the program.
+This is a 3 cyclic instruction. It sets in motion a new execution track. The first instruction records what direction the new execution track will progress in. The second records where it will begin executing. The third records where it's default memory caret will be and then adds it to the pool of execution tracks in the program.
 
 #### Query environment
     
@@ -251,7 +253,7 @@ This is a 3 cyclic instruction which sets in motion a new execution track. The f
     
 Query environment for the following information and store it in bitgrid
 
-    v = Bitopiary version
+    v = Rabbit~ version
     w = read head width
     h = read head height
     s = read head size
@@ -281,7 +283,7 @@ The `.` is special for these two instructions:
     remaining characters or bit patterns
     Default input: Source
     
-A character instruction simply reads itself back into the memory and does nothing else. `.` is as of Bitopiary v.1 undefined
+A character instruction simply reads itself back into the memory and does nothing else. A character isntruction modified with `.` is as of Rabbit~ v.1 undefined
     
 ### Non instruction character
 

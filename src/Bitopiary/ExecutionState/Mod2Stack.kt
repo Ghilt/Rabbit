@@ -1,5 +1,6 @@
 package Bitopiary.ExecutionState
 
+
 class CopyStack(private val environment : ExecutionTrack) {
 
     private var state = 0
@@ -10,7 +11,11 @@ class CopyStack(private val environment : ExecutionTrack) {
     fun executeInstruction() {
         when (state) {
             0 -> term = environment.getInt()
-            1 -> environment.setValue(term)
+            1 -> {
+                environment.setValue(term)
+                Bitopiary.Logger.l(environment, "CopyStack copying: $term")
+
+            }
         }
         state++
     }

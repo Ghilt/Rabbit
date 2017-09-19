@@ -48,7 +48,9 @@ class QueryParameter {
         var caretY = 'y'
         var maxVal = 'M'
         var minVal = 'm'
-        var negativeSign = 'n'
+        var ones = 'o'
+        var mostSignificantOnes = 'u'
+        var leastSignificantOnes = 'l'
 
         fun stack(parameter :Char) : Char?{
             return if (OperatorType.values().filter { it.usesStack }.map { it.toCharacter[0] }.contains(parameter)) parameter else null
@@ -176,6 +178,7 @@ enum class OperatorType {
     BEGIN_Q_LOOP {
         override val toCharacter = charArrayOf('(')
         override val isBracket = true
+        override val isRestrictable = false
         override fun matches(type: OperatorType) = type == END_Q_LOOP
         override val instructionConstructor = ::BracketInstruction
     },
@@ -264,7 +267,10 @@ enum class OperatorType {
     fun createInstruction(op: Char, modify: Boolean, input: ArrayList<Char>, type: OperatorType) : Instruction {
         return instructionConstructor(op, modify, input, type)
     }
+
     open fun matches(type: OperatorType): Boolean = false
+    fun equalsOrMatch(type: OperatorType): Boolean = this == type || matches(type)
+
     abstract val toCharacter: CharArray
 
 }

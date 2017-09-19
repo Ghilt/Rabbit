@@ -251,7 +251,7 @@ This is a 3 cyclic instruction. It sets in motion a new execution track. The fir
     ? query environment
     Default input: Source
     
-Query environment for the following information and store it in bitgrid
+Query environment for the following information and store it in bit grid
 
     v = Rabbit~ version
     w = read head width
@@ -261,9 +261,11 @@ Query environment for the following information and store it in bitgrid
     a = amount of active carets
     x = active caret x coordinate
     y = active caret y coordinate
-    M = max value of integers depnding on your current read head
-    m = min value of integers depnding on your current read head
-    n = gives the negative sign for two's complement binary
+    M = max value of integers depending on your current read head
+    m = min value of integers depending on your current read head
+    o = fills readhead with 1's
+    u = most significant half of read head filled with 1's rest 0's
+    l = least significant half of read head filled with 1's rest 0's
     arithmetic or bitwise instruction(+,-,* etc) = either zero or the first value of the ongoing instruction cycle
  
 #### I/O
@@ -272,7 +274,7 @@ Query environment for the following information and store it in bitgrid
     : print
     Default input: I/O
     
-Read reads from standard input and stores in bitgrid, and print prints to standard out.
+Read reads from standard input and stores in bit grid, and print prints to standard out.
 
 The `.` is special for these two instructions:
   - Read can only store one character at a time to the bitgrid. The rest is stored for future use so `=.` uses this as input instead and do not require the user to enter anything.

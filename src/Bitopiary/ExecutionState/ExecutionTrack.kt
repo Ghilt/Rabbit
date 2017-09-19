@@ -7,13 +7,10 @@ class ExecutionTrack(program: BitopiaryProgram,
                      private val grid: BitopiaryGrid,
                      private val executionDirection: OperatorType,
                      private val executionPointer: Caret,
-                     startMemoryPos: Caret) {
+                     startMemoryPos: Caret) : ConditionalStack.RestrictionTarget {
 
     var isTerminated = false
-    data class Restriction(val restricted: Boolean = false, internal val source: OperatorType = OperatorType.NO_OPERATION) {
-        fun isBy(sourceOfRestriction: OperatorType): Boolean = sourceOfRestriction == source
-
-    }
+    data class Restriction(val restricted: Boolean = false, internal val source: OperatorType = OperatorType.NO_OPERATION)
 
     private var restrictInstructions = Restriction()
     private var caretCounter = 0
@@ -88,18 +85,17 @@ class ExecutionTrack(program: BitopiaryProgram,
         isTerminated = true
     }
 
-    fun enableInstructions() {
+    override fun enableInstructions() {
         restrictInstructions = Restriction()
     }
 
-    fun restrictInstructions(source: OperatorType) {
+    override fun restrictInstructions(source: OperatorType) {
         restrictInstructions = Restriction(true, source)
     }
 
     fun restrictedBy(): OperatorType = restrictInstructions.source
 
     fun isRestricted(): Boolean = restrictInstructions.restricted
-
 
     fun configureReadHead(dimensionDouble: Boolean = false, value: Int = getInt()) {
         if(dimensionDouble){
@@ -145,9 +141,11 @@ class ExecutionTrack(program: BitopiaryProgram,
             QueryParameter.amountOfCarets -> setValue(carets.size)
             QueryParameter.caretX -> setValue(activeCaret.x)
             QueryParameter.caretY -> setValue(activeCaret.y)
-            QueryParameter.maxVal -> setValue(Math.pow(2.0, (readHead.size).toDouble()).toInt() - 1 shr 1) // Do not understand why shifiting -1 does not work
-            QueryParameter.minVal -> setValue(Math.pow(2.0, (readHead.size).toDouble()).toInt())
-            QueryParameter.negativeSign -> setValue(1 shl readHead.size-1)
+            QueryParameter.maxVal -> setValue(-1 ushr 1)
+            QueryParameter.minVal -> setValue(1 shl readHead.size-1)
+            QueryParameter.ones -> setValue(-1)
+            QueryParameter.mostSignificantOnes -> setValue(-1 ushr readHead.size/2)
+            QueryParameter.leastSignificantOnes -> setValue(-1 shl readHead.size/2)
             QueryParameter.stack(parameter) -> setValue(mod3Stacks[parameter.toOperator()] !!.getTerm())
 
         }

@@ -1,6 +1,8 @@
 package Extensions
 
+import Bitopiary.ExecutionState.LoopStack
 import Bitopiary.ExecutionState.ReadHead
+import java.util.*
 
 fun ArrayList<Char>.toInt() : Int = when (this.size == 1 && !this[0].isDigit()) {
     true -> this[0].toInt()
@@ -47,3 +49,5 @@ infix fun Int.flip(y: Int): Int {
 }
 
 val boolToBinary = { b: Boolean -> if (b) "1" else "0" }
+
+fun Stack<LoopStack.LoopMarker>.parentIsRestricted(): Boolean = this.isNotEmpty() && this.peek().restrictedLoop

@@ -36,7 +36,7 @@ object Logger {
 
     fun l(grid: BitopiaryGrid, caret: Caret, executionPointer: Caret) {
         if (logIt && logGrid) {
-            grid.debugPrint(caret, executionPointer)
+            grid.debugPrintInterpreted(caret, executionPointer)
         }
     }
 }

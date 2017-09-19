@@ -3,11 +3,18 @@ package Bitopiary.ExecutionState
 import Extensions.toInt
 import Bitopiary.Instructions.ConditionalInstruction
 import Bitopiary.Logger
+import Bitopiary.OperatorType
 import java.util.*
 
 class ConditionalStack(private val environment : ExecutionTrack) {
 
-    data class Marker(val startInstruction: ConditionalInstruction, var startValue: Int) {
+    interface RestrictionTarget{
+
+        fun enableInstructions()
+        fun restrictInstructions(source: OperatorType)
+    }
+
+    data class Marker(val startInstruction: ConditionalInstruction, var startValue: Int, val restrictionTarget: RestrictionTarget) {
 
         var toBePaired: ConditionalInstruction? = startInstruction
         var conditionTrue = false
@@ -17,9 +24,9 @@ class ConditionalStack(private val environment : ExecutionTrack) {
 
         fun matches(other: ConditionalInstruction): Boolean = false != toBePaired?.type?.matches(other.type) //Considered match if none to match with
 
-        operator fun component3() = toBePaired
-        operator fun component4() = conditionTrue
-        operator fun component5() = awaitingCondition
+        operator fun component4() = toBePaired
+        operator fun component5() = conditionTrue
+        operator fun component6() = awaitingCondition
 
     }
 
@@ -27,7 +34,7 @@ class ConditionalStack(private val environment : ExecutionTrack) {
 
     fun executeConditionalInstruction(instruction: ConditionalInstruction) {
         when (stack.isEmpty() || !stack.peek().matches(instruction)) {
-            true -> if (!environment.isRestricted()) startConditionalChain(instruction)
+            true -> startConditionalChain(instruction)
             false -> continueConditionalChain(instruction)
         }
     }
@@ -37,22 +44,30 @@ class ConditionalStack(private val environment : ExecutionTrack) {
             true -> instruction.input.toInt()
             false -> environment.getInt()
         }
-        stack.add(Marker(instruction, relevantValue))
+        if (environment.isRestricted()){
+            stack.add(Marker(instruction, relevantValue, object : RestrictionTarget {
+                /**Conditional chain is restricted and cannot affect anything*/
+                override fun enableInstructions() {}
+                override fun restrictInstructions(source: OperatorType) {}
+            }))
+        } else {
+            stack.add(Marker(instruction, relevantValue, environment))
+        }
     }
 
     private fun continueConditionalChain(nextInstruction: ConditionalInstruction){
         val marker = stack.peek()
-        val (startInstruction, _, toBePaired, conditionTrue, awaitingCondition) = marker
+        val (startInstruction, _, _, toBePaired, conditionTrue, awaitingCondition) = marker
 
         val startPair = null == toBePaired
         val waitingForFinish = marker.finished
         val last = toBePaired?.type == startInstruction.type && marker.clauseCounter != 0
 
         when {
-            last -> finishUpChain()
-            waitingForFinish -> restrictInstructions(startPair, nextInstruction)
-            startPair -> handleStartPair(awaitingCondition, conditionTrue, nextInstruction)
-            null != toBePaired -> handleEndPair(awaitingCondition, conditionTrue, marker, toBePaired, nextInstruction)
+            last -> finishUpChain(marker)
+            waitingForFinish -> restrictInstructions( marker, startPair, nextInstruction)
+            startPair -> handleStartPair( marker, awaitingCondition, conditionTrue, nextInstruction)
+            null != toBePaired -> handleEndPair( marker, awaitingCondition, conditionTrue, toBePaired, nextInstruction)
         }
 
         if (startPair){
@@ -63,13 +78,13 @@ class ConditionalStack(private val environment : ExecutionTrack) {
         }
     }
 
-    private fun finishUpChain() {
-        environment.enableInstructions()
+    private fun finishUpChain(marker: Marker) {
+        marker.restrictionTarget.enableInstructions()
         val over = stack.pop()
         Logger.l(environment, "ConditionalStack conditional ended: ${over.clauseCounter}")
     }
 
-    private fun handleEndPair(awaitingCondition: Boolean, conditionTrue: Boolean, marker: Marker, startPaired: ConditionalInstruction, endPaired: ConditionalInstruction) {
+    private fun handleEndPair(marker: Marker, awaitingCondition: Boolean, conditionTrue: Boolean, startPaired: ConditionalInstruction, endPaired: ConditionalInstruction) {
         if (awaitingCondition){
             val valueOfEnd = endPaired.getValue(environment.getInt())
             marker.conditionTrue = true == startPaired.evaluateConditional(marker.startValue, valueOfEnd)
@@ -77,24 +92,24 @@ class ConditionalStack(private val environment : ExecutionTrack) {
         } else if (conditionTrue) {
             marker.finished = true
         } else {
-            environment.enableInstructions()
+            marker.restrictionTarget.enableInstructions()
         }
         marker.awaitingCondition = !awaitingCondition
     }
 
-    private fun handleStartPair(awaitingCondition: Boolean, conditionTrue: Boolean, instruction: ConditionalInstruction) {
+    private fun handleStartPair(marker: Marker, awaitingCondition: Boolean, conditionTrue: Boolean, instruction: ConditionalInstruction) {
         if(awaitingCondition){
             //Do nothing
         } else if (!conditionTrue){
-            environment.restrictInstructions(instruction.type)
+            marker.restrictionTarget.restrictInstructions(instruction.type)
         }
     }
 
-    private fun restrictInstructions(startPair: Boolean, instruction: ConditionalInstruction) {
+    private fun restrictInstructions(marker: Marker, startPair: Boolean, instruction: ConditionalInstruction) {
         if(startPair){
-            environment.restrictInstructions(instruction.type)
+            marker.restrictionTarget.restrictInstructions(instruction.type)
         } else {
-            environment.enableInstructions()
+            marker.restrictionTarget.enableInstructions()
         }
     }
 

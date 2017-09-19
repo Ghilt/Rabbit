@@ -3,6 +3,7 @@ package Bitopiary
 import Bitopiary.ExecutionState.Caret
 import Bitopiary.ExecutionState.ReadHead
 import Extensions.boolToBinary
+import Extensions.tail
 
 // https://discuss.kotlinlang.org/t/multi-dimensonal-arrays-are-a-pain-point-in-kotlin/561
 
@@ -24,7 +25,10 @@ class BitopiaryGrid(){
         grid.foldRange(caret, readHead, bitList) {
             accumulator, index, nextValue -> accumulator.apply { set(index, nextValue)}
         }
-        return Integer.parseInt(bitList.joinToString("", transform = boolToBinary), 2)
+        var binaryString = bitList.joinToString("", transform = boolToBinary)
+        binaryString = if (binaryString.length >= 32) binaryString.substring(1..31) else binaryString
+
+        return Integer.parseInt(binaryString, 2)
     }
 
     fun getChar(readHead: ReadHead, caret: Caret) = getUnsignedInt(readHead, caret).toChar()
@@ -75,6 +79,37 @@ class BitopiaryGrid(){
                     addon = "x"
                 }
                 print(if (grid[x, y]) "1$addon" else "_$addon" )
+
+            }
+            println()
+        }
+        println(".")
+    }
+
+    fun debugPrintInterpreted(mem: Caret, exec: Caret, width: Int = 7, height: Int = 5) {
+        val readHead = ReadHead()
+        for (y in -readHead.height..height*readHead.height step readHead.height){
+            for (x in -readHead.width..width*readHead.width step readHead.width){
+
+                val caret = Caret(x, y)
+
+                val isMem = x == mem.x && y == mem.y
+                val isExec = x == exec.x && y == exec.y
+
+                var addon1 = "("
+                var addon2 = ")"
+                if (isMem && isExec) {
+                    addon1 = "{"
+                    addon2 = "}"
+                } else if (isMem) {
+                    addon1 = "["
+                    addon2 = "]"
+                } else if (isExec) {
+                    addon1 = "|"
+                    addon2 = "|"
+                }
+                val cell = "$addon1${getChar(readHead, caret)} ${getInt(readHead, caret)}$addon2\t\t"
+                print(cell)
 
             }
             println()

@@ -17,6 +17,7 @@ class ExecutionTrack(program: BitopiaryProgram,
     private var carets = ArrayList<Caret>()
     private val readHead = ReadHead()
     private val userInputStream = UserInputStream()
+    private val executeFromMemoryManagerSimple= ExecuteFromMemoryManagerSimple()
     private val executeFromMemoryManager = ExecuteFromMemoryManager()
     private val createExecutionTrackManager = NewExecutionTrackManager(program)
     var copyStack = CopyStack(this)
@@ -125,6 +126,10 @@ class ExecutionTrack(program: BitopiaryProgram,
 
     fun loadInputToMemory() {
         setValue(userInputStream.get())
+    }
+
+    fun executeFromMemorySimple(instr: Char = grid.getChar(readHead, activeCaret)) {
+        executeFromMemoryManagerSimple.executeFromMemory(this, instr)
     }
 
     fun executeFromMemory(fromInstruction: ArrayList<Char> = ArrayList<Char>().apply{ add(grid.getChar(readHead, activeCaret))}) {

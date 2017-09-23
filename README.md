@@ -201,21 +201,26 @@ This is a 2-cyclic instruction. Copy the value at the caret at the first instruc
     ; store
     Default input: Source
     
-Store input to instruction at caret. Usefull to transfer some data to the bitgrid from the source code
+Store input to instruction at caret. Useful to transfer some data to the bitgrid from the source code
   
 #### Configure read head
   
-    £ configure readhead
+    ´ configure readhead
     Default input: Intrinsic: Doubles the size
 
 This is a 2-cyclic instruction. First you configure width, then height, only when you have configured both (a.k.a on the second instruction) does the change take effect. (This is subject to be updated in future versions, a split for execution readhead and memory readhead is likely)
 
 #### Execute
 
-    ! execute
+    ! execute simple
+    £ execute
     Default input: Caret
     
-This is a 3 cyclic instruction. It records what instruction to perform, then records what input to give to this instruction and then executes it at the third instruction. The instruction is executed as if it were a ordinary instruction being executed.
+`!` is a 2 cyclic instruction. It records what instruction to perform, and then executes it at the second instruction. The instruction is executed as if it were a ordinary instruction being executed.
+
+`£` is a 3 cyclic instruction. It records what instruction to perform, then records what input to give to this instruction and then executes it at the third instruction. The instruction is executed as if it were a ordinary instruction being executed.
+
+
 
 #### Terminate executiontrack
 

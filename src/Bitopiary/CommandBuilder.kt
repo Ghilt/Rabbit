@@ -102,6 +102,11 @@ class CommandBuilder(private val operator : Char){
 
     }
 
+    fun setInputAsCaret() {
+        hasCommandModifier = commandType.input != StandardInputType.Caret
+
+    }
+
 }
 
 

@@ -204,13 +204,17 @@ enum class OperatorType {
         override val instructionConstructor = ::ConditionalInstruction
     },
     CONFIGURE_READHEAD {
-        override val toCharacter = charArrayOf('£')
+        override val toCharacter = charArrayOf('´')
         override val instructionConstructor = ::ConfigureReadHeadInstruction
         override val input = StandardInputType.Intrinsic
     },
     EXECUTE {
-        override val toCharacter = charArrayOf('!')
+        override val toCharacter = charArrayOf('£')
         override val instructionConstructor = ::ExecuteInstruction
+    },
+    EXECUTE_SIMPLE {
+        override val toCharacter = charArrayOf('!')
+        override val instructionConstructor = ::ExecuteSimpleInstruction
     },
     EXIT_EXECUTION {
         override val toCharacter = charArrayOf('¤', 0.toChar())

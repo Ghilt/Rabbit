@@ -1,5 +1,5 @@
 
- <img align="right" src="https://user-images.githubusercontent.com/3304335/30387851-2aee32a2-98ae-11e7-89f1-18619c839791.png" width="250">
+ <img align="right" src="https://user-images.githubusercontent.com/3304335/30387851-2aee32a2-98ae-11e7-89f1-18619c839791.png" width="150">
  
  # Rabbit~ 
 
@@ -73,6 +73,20 @@ Default caret: x = 0, y = 0
  - `+`: perform addition of prepared values and store at C2(0,0), 1 + 1 = 2
  - `]`: compare value of active caret C2(0,0) with recorded value of loop 1 != 2 so continue
  - Then the next loop cycle start at `\` as you'd expect. Since there are 3 caret swaps in the loop and only 2 carets it all works out brilliantly. The loop never ends.
+ 
+ #### Small calculator program:
+
+Here is a small program which you can use as a simple calculator. The user enters commands analogous to the arithmetic operations in Rabbit~ to which is performs and then exits when you send an 's'. Enter is required after each input, a valid input sequence for the below programs would be `81 * 4 + 2 / 2 =` which would output `163` and then terminate the program.
+
+Here it is implemented with a loop and two memory carets
+
+    $>=@[.0={.=}{@:¤}!\@!\!\=!\!!@].1
+
+And here it is using Rabbit~'s function syntax and a single caret. These two programs are functionally the same.
+
+    _=>={.=}{<:¤}>=<!<!>!>!<!<!^>;"<#.>##
+
+As you can see they are both short and quite unreadable, but a sense of structure can be perceived if you compare them. The flow of exclamation points and move commands in the second one is objectively very satisfying with no double moves. Consult the command list at below to find enlightenment of how these two programs work. 
 
 ## List of instructions
 

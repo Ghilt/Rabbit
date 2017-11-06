@@ -76,13 +76,13 @@ Default caret: x = 0, y = 0
  
  #### Small calculator program:
 
-Here is a small program which you can use as a simple calculator. The user enters commands analogous to the arithmetic operations in Rabbit~ to which is performs and then exits when you send an 's'. Enter is required after each input, a valid input sequence for the below programs would be `81 * 4 + 2 / 2 =` which would output `163` and then terminate the program.
+Here is a small program which you can use as a simple calculator. The user enters commands analogous to the arithmetic operations in Rabbit~, which is performed and then exits when you enter an '='. Enter is required after each input in the formula, a valid input sequence for the below programs would be `81 * 4 + 2 / 2 =` which would output `163` and then terminate the program.
 
 Here it is implemented with a loop and two memory carets
 
     $>=@[.0={.=}{@:¤}!\@!\!\=!\!!@].1
 
-And here it is using Rabbit~'s function syntax and a single caret. These two programs are functionally the same.
+And here it is using Rabbit~'s function syntax and a single caret. These two programs are behaves exactly the same.
 
     _=>={.=}{<:¤}>=<!<!>!>!<!<!^>;"<#.>##
 
@@ -106,7 +106,7 @@ Some instructions will be described as 2-cyclic or 3-cyclic. That means they do 
 
 #### Arithmetic and bit-wise instructions
 
-These instruction are 3-cyclic and all function the same way. The first two instructions read a value from input while the final instruction in the cycle outputs the result to the bitgrid. 
+These instruction are 3-cyclic and all work the same way. The first two instructions read a value from input while the final instruction in the cycle outputs the result to the bitgrid. 
 
     + plus
     - minus
@@ -249,7 +249,7 @@ Terminates execution track. A completely empty blank instruction also does this.
     $ spawn new caret
     Default input: Instrinsic 1
     
-Spawns a new memory caret at current caret position. Input decides how many to create. You do not swap to the caret you created, the carets can be thought of as 'numbered' and the standard caret is the 0'th caret and the next one you creates is the 1'st and then the 2'nd one and so forth.
+Spawns a new memory caret at current caret position. Input decides how many to create. You do not swap to the caret you created. The carets are numbered and the standard caret is the 0'th caret and the next one you creates is the 1'st and then the 2'nd one and so forth.
 
 #### Change active caret
 

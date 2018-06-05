@@ -82,7 +82,7 @@ Here it is implemented with a loop and two memory carets
 
     $>=@[.0={.=}{@:¤}!\@!\!\=!\!!@].1
 
-And here it is using Rabbit~'s function syntax and a single caret. These two programs are behaves exactly the same.
+And here it is using Rabbit~'s function syntax and a single caret. These two programs behaves exactly the same.
 
     _=>={.=}{<:¤}>=<!<!>!>!<!<!^>;"<#.>##
 
@@ -157,7 +157,7 @@ Loop v1 times
  
  Loop v1 times     
     
-Using the inverted case here guarantees at least one iteration which can be useful. Loops can not overlap, the following is not two loops but the begining of four loops. Which if the program terminates before a matching end loop is executed will have done nothing
+Using the inverted case here guarantees at least one iteration which can be useful. Loops can not overlap, the following is not two loops but the begining of four loops. Which, if the program terminates before a matching end loop is executed, will have done nothing
 
     ( [ ) ] 
     
@@ -263,7 +263,7 @@ Cycles the active memory caret through all created carets as default. If `.`is u
     # start function
     Default input: Caret   
    
-This is a 3 cyclic instruction. It sets in motion a new execution track. The first instruction records what direction the new execution track will progress in. The second records where it will begin executing. The third records where it's default memory caret will be and then adds it to the pool of execution tracks in the program.
+This is a 3 cyclic instruction. It sets in motion a new execution track. The first instruction records what direction the new execution track will progress in. The second instruction records where it will begin executing. The third instruction records where it's default memory caret will be and then adds it to the pool of execution tracks in the program.
 
 #### Query environment
     

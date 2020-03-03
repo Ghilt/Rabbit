@@ -130,9 +130,9 @@ If the modifier `.` is applied in stage 3 on any of these instructions, it will 
     []
     Default input: Caret
 
-In the snippets below the first line is symbolising code where capital lettes symbolize any non []() instruction. The second line is the bracket's input which by default is the value at the caret is named on the third line.
+In the snippets below the first line is symbolising code. The capital letters in the first line symbolize any non `[]()` instruction. The second line is the bracket's input which by default is the value at the caret.
 
- The ordinary loop instructions checks the value under the caret and compares it to the value under the other loop instruction.  
+The ordinary loop instructions checks the value under the caret and compares it to the value under the other loop instruction.  
 
      [ABCD]
      v1   v2
@@ -162,14 +162,14 @@ Using the inverted case here guarantees at least one iteration which can be usef
     ( [ ) ] 
     
 
-If you think those inverted bracket instructions are kind of ugly wait until you see the conditional construction, speaking of which
+If you think those inverted bracket instructions are kind of ugly wait until you see the conditional construction, speaking of which:
 
 #### Conditional instruction
 
     {}
     Default input: Caret
     
-In the snippets below the first line is symbolising code where capital lettes symbolize any non {} instruction. The second line is the bracket's input which by default is the value at the caret is named on the third line.
+In the snippets below the first line is symbolising code, where capital lettes symbolize any non `{}` instruction. The second line is symbolizing the bracket's input, first input and second input.
 
     {ABCDE}FGHI{JKL}MNO
     v1    v2   

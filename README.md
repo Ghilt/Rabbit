@@ -230,7 +230,7 @@ This is a 2-cyclic instruction. First you configure width, then height, only whe
     £ execute
     Default input: Caret
     
-`!` is a 2 cyclic instruction. It records what instruction to perform, and then executes it at the second instruction. The instruction is executed as if it were a ordinary instruction being executed.
+`!` is a 2 cyclic instruction. It records what instruction to perform, and then executes it at the second instruction. The instruction is executed as if it were an ordinary instruction being executed.
 
 `£` is a 3 cyclic instruction. It records what instruction to perform, then records what input to give to this instruction and then executes it at the third instruction. The instruction is executed as if it were a ordinary instruction being executed.
 
@@ -256,7 +256,7 @@ Spawns a new memory caret at current caret position. Input decides how many to c
     \ Change caret
     Default input: Instrinsic cycle to next caret
     
-Cycles the active memory caret through all created carets as default. If `.`is used it chooses caret based on the order they were created instead instead. `\1` e.g. selects the caret you yourself created first in your program
+By default cycles through the created carets. If `.` is used it chooses caret based on the order they were created and reads from the bitgrid. While `\1` reads from source and selects the caret you yourself created first in your program.
 
 #### Start function
     
